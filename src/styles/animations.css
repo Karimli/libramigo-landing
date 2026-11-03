@@ -1,4 +1,4 @@
-/* Keyframes and motion utilities – names match reference/*.dc.html. */
+/* All keyframes and motion utilities. Names match reference/*.dc.html. */
 
 @keyframes lm-rise { from { transform: translateY(105%); } to { transform: translateY(0); } }
 @keyframes lm-fade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -6,6 +6,16 @@
   from { opacity: 0; transform: translateY(28px) rotate(-3deg); }
   to { opacity: 1; transform: translateY(0) rotate(-3deg); }
 }
+@keyframes lm-draw { to { stroke-dashoffset: 0; } }
+@keyframes lm-fill { from { width: 0; } }
+@keyframes lm-line { from { transform: scaleX(0); } }
+@keyframes lm-pop { 0% { transform: scale(0); } 70% { transform: scale(1.25); } 100% { transform: scale(1); } }
+@keyframes lm-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(233, 168, 58, 0.6); }
+  70% { box-shadow: 0 0 0 14px rgba(233, 168, 58, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(233, 168, 58, 0); }
+}
+@keyframes lm-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
 /* Hero */
 .rise { animation: lm-rise 900ms var(--ease-out) both; }
@@ -15,6 +25,32 @@
 .spine:hover { transform: translateY(-16px); }
 .spine.lean { transform: rotate(-7deg); }
 .spine.lean:hover { transform: rotate(-7deg) translateY(-16px); }
+
+/* Cards */
+.lift { transition: transform 320ms var(--ease-out), box-shadow 320ms ease, border-color 320ms ease; }
+.lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 28px 54px rgba(5, 25, 23, 0.45);
+  border-color: rgba(233, 168, 58, 0.6);
+}
+.paper .lift:hover { box-shadow: 0 24px 46px rgba(10, 37, 35, 0.18); border-color: var(--green-900); }
+.icon { transition: transform 320ms var(--ease-out); }
+.lift:hover .icon { transform: rotate(-8deg) scale(1.08); }
+
+/* Mini interfaces, roadmap, waitlist */
+.fill { animation: lm-fill 1600ms var(--ease-out) 500ms both; }
+.track { transform-origin: left center; animation: lm-line 1400ms var(--ease-out) both; }
+.star { transform-origin: center; transform-box: fill-box; animation: lm-pop 520ms var(--ease-out) both; }
+.pulse { animation: lm-pulse 2200ms ease-out infinite; }
+.float { animation: lm-float 4s ease-in-out infinite; }
+.check { stroke-dasharray: 40; stroke-dashoffset: 40; animation: lm-draw 600ms ease-out 150ms forwards; }
+
+/* Scroll-driven variants: only where supported. Elsewhere .reveal has no animation (fully visible). */
+@supports (animation-timeline: view()) {
+  .reveal { animation: lm-fade linear both; animation-timeline: view(); animation-range: entry 0% cover 28%; }
+  .track { animation: lm-line linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
+  .fill { animation: lm-fill linear both; animation-timeline: view(); animation-range: entry 20% cover 45%; }
+}
 
 /* Language switch: text fades out/in (filter is used so it never fights opacity keyframes).
    :where() keeps specificity at 0 so elements with their own transition (e.g. .btn) win;
@@ -28,4 +64,5 @@
     animation: none !important;
     transition: none !important;
   }
+  .check { stroke-dashoffset: 0; }
 }

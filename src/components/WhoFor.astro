@@ -1,0 +1,94 @@
+---
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const t = useTranslations(Astro.props.lang);
+
+const personas = [
+  {
+    key: 'avid', accent: 'var(--red)',
+    icon: '<path d="M3 5.5C5.5 4 8.5 4 12 6c3.5-2 6.5-2 9-.5V19c-2.5-1.5-5.5-1.5-9 .5-3.5-2-6.5-2-9-.5z M12 6v13.5" fill="none" stroke="#F4EDE1" stroke-width="1.8" stroke-linejoin="round"></path>',
+  },
+  {
+    key: 'youth', accent: 'var(--amber)',
+    icon: '<path d="M5 11.5c0-3 1.5-5 4-6M5 11.5h4v6H5zM14 11.5c0-3 1.5-5 4-6M14 11.5h4v6h-4z" fill="none" stroke="#0A2523" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"></path>',
+  },
+  {
+    key: 'everyone', accent: 'var(--paper)',
+    icon: '<circle cx="12" cy="12" r="8.5" fill="none" stroke="#0A2523" stroke-width="1.8"></circle><path d="M15.5 8.5 L13.2 13.2 L8.5 15.5 L10.8 10.8 Z" fill="#B8323F" stroke="#0A2523" stroke-width="1.4" stroke-linejoin="round"></path>',
+  },
+];
+---
+<section class="who">
+  <div class="inner">
+    <p class="eyebrow" data-i18n="whoFor.eyebrow">{t('whoFor.eyebrow')}</p>
+    <h2 class="section-title" data-i18n="whoFor.title">{t('whoFor.title')}</h2>
+    <div class="card-grid personas">
+      {personas.map((p) => (
+        <div class="reveal persona-wrap">
+          <div class="lift persona" style={`--accent: ${p.accent}`}>
+            <div class="icon" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24" set:html={p.icon} />
+            </div>
+            <h3 data-i18n={`whoFor.${p.key}.title`}>{t(`whoFor.${p.key}.title`)}</h3>
+            <p data-i18n={`whoFor.${p.key}.text`}>{t(`whoFor.${p.key}.text`)}</p>
+            <ul>
+              {[1, 2, 3].map((n) => (
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 L8 14 L16 6" fill="none" stroke="#E9A83A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  <span data-i18n={`whoFor.${p.key}.benefit${n}`}>{t(`whoFor.${p.key}.benefit${n}`)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .who {
+    background: var(--green-800);
+    border-top: 1px solid rgba(244, 237, 225, 0.12);
+  }
+  .inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 120px var(--gutter);
+  }
+  .personas { margin: 60px 0 0; }
+  .persona-wrap { min-width: 0; }
+  .persona {
+    height: 100%;
+    padding: 32px;
+    border-radius: var(--radius-card);
+    background: var(--green-700);
+    border: 1px solid rgba(244, 237, 225, 0.14);
+    border-top: 6px solid var(--accent);
+  }
+  .icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .persona h3 { margin: 26px 0 0; font-size: 26px; font-weight: 800; letter-spacing: -0.01em; }
+  .persona p { margin: 10px 0 0; font-size: 18px; line-height: 1.6; color: var(--text-on-dark); }
+  .persona ul {
+    margin: 22px 0 0;
+    padding: 22px 0 0;
+    list-style: none;
+    border-top: 1px solid rgba(244, 237, 225, 0.14);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 17px;
+    line-height: 1.45;
+  }
+  .persona li { display: flex; gap: 10px; }
+  .persona li svg { flex: 0 0 auto; margin-top: 2px; }
+</style>

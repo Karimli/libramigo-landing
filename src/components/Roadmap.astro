@@ -1,0 +1,108 @@
+---
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const t = useTranslations(Astro.props.lang);
+
+// Line colour, dot style and status pill per stage (reference/AZ.dc.html).
+const stages = [
+  { n: 1, track: 'var(--green-900)', delay: 0,   dot: 'current', pill: 'pill-dark',    items: 0 },
+  { n: 2, track: 'var(--track-2)',   delay: 200, dot: 'next',    pill: 'pill-amber',   items: 3 },
+  { n: 3, track: 'var(--track-3)',   delay: 400, dot: 'later-1', pill: 'pill-outline', items: 3 },
+  { n: 4, track: 'var(--track-4)',   delay: 600, dot: 'later-2', pill: 'pill-outline', items: 2 },
+];
+---
+<section id="roadmap" class="roadmap paper">
+  <div class="inner">
+    <p class="eyebrow" data-i18n="roadmap.eyebrow">{t('roadmap.eyebrow')}</p>
+    <h2 class="section-title" data-i18n="roadmap.title">{t('roadmap.title')}</h2>
+    <p class="section-lead" data-i18n="roadmap.subtitle">{t('roadmap.subtitle')}</p>
+    <ol class="timeline">
+      {stages.map((s) => {
+        const k = `roadmap.stage${s.n}`;
+        return (
+          <li class="reveal stage">
+            <div class="track" aria-hidden="true" style={`background: ${s.track}; animation-delay: ${s.delay}ms`}></div>
+            <span class:list={['dot', `dot-${s.dot}`, { pulse: s.dot === 'current' }]} aria-hidden="true"></span>
+            <div class="lift stage-card">
+              <div class="stage-top">
+                <span class="when" data-i18n={`${k}.when`}>{t(`${k}.when`)}</span>
+                <span class:list={['pill', s.pill]} data-i18n={`${k}.status`}>{t(`${k}.status`)}</span>
+              </div>
+              <h3 data-i18n={`${k}.title`}>{t(`${k}.title`)}</h3>
+              {s.items === 0 ? (
+                <p data-i18n={`${k}.text`}>{t(`${k}.text`)}</p>
+              ) : (
+                <ul>
+                  {Array.from({ length: s.items }, (_, i) => (
+                    <li data-i18n={`${k}.item${i + 1}`}>{t(`${k}.item${i + 1}`)}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 120px var(--gutter);
+  }
+  .timeline {
+    margin: 72px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+    gap: 44px 0;
+  }
+  .stage { min-width: 0; position: relative; padding: 44px 28px 0 0; }
+  .stage:last-child { padding-right: 0; }
+  .track {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 2px;
+  }
+  .dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 4px solid var(--green-900);
+  }
+  .dot-current { background: var(--amber); }
+  .dot-later-1 { border-color: var(--track-2); }
+  .dot-later-2 { border-color: var(--track-3); }
+  .stage-card {
+    padding: 22px;
+    border-radius: var(--radius-card-sm);
+    background: var(--paper-card);
+    border: 1.5px solid var(--paper-line);
+  }
+  .stage-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .when { font-size: 16px; font-weight: 800; color: var(--red); }
+  .pill { padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+  .pill-dark { background: var(--green-700); color: var(--paper); }
+  .pill-amber { background: var(--amber); color: var(--green-900); }
+  .pill-outline { padding: 4px 9px; border: 1.5px solid var(--green-900); color: var(--green-900); }
+  .stage-card h3 { margin: 12px 0 0; font-size: 24px; line-height: 1.25; font-weight: 800; }
+  .stage-card p { margin: 10px 0 0; font-size: 16px; line-height: 1.55; color: var(--text-on-paper-muted); }
+  .stage-card ul { margin: 12px 0 0; padding: 0 0 0 18px; font-size: 16px; line-height: 1.6; color: var(--text-on-paper-muted); }
+</style>
