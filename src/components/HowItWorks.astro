@@ -168,6 +168,9 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
     border-radius: 4px;
     background: var(--paper-line);
     overflow: hidden;
+    /* clip, not hidden: hidden makes this a scroll container, which would bind the
+       .fill view() timeline to this box instead of the page (bar would never fill). */
+    overflow: clip;
   }
   .fill { height: 100%; width: 64%; border-radius: 4px; background: var(--amber); }
   .pill {

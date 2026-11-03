@@ -45,11 +45,20 @@
 .float { animation: lm-float 4s ease-in-out infinite; }
 .check { stroke-dasharray: 40; stroke-dashoffset: 40; animation: lm-draw 600ms ease-out 150ms forwards; }
 
-/* Scroll-driven variants: only where supported. Elsewhere .reveal has no animation (fully visible). */
+/* Scroll-driven variants: only where supported. Elsewhere .reveal has no animation (fully visible).
+   Longhands on purpose: the CSS minifier folds `animation` + `animation-timeline` into a single
+   `animation: … view()` shorthand, which Chrome rejects (the whole declaration is dropped). */
 @supports (animation-timeline: view()) {
-  .reveal { animation: lm-fade linear both; animation-timeline: view(); animation-range: entry 0% cover 28%; }
-  .track { animation: lm-line linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
-  .fill { animation: lm-fill linear both; animation-timeline: view(); animation-range: entry 20% cover 45%; }
+  .reveal, .track, .fill {
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-duration: auto;
+    animation-delay: 0s !important; /* time delays (incl. inline) don't apply to scroll timelines */
+    animation-timeline: view();
+  }
+  .reveal { animation-name: lm-fade; animation-range: entry 0% cover 28%; }
+  .track { animation-name: lm-line; animation-range: entry 10% cover 40%; }
+  .fill { animation-name: lm-fill; animation-range: entry 20% cover 45%; }
 }
 
 /* Language switch: text fades out/in (filter is used so it never fights opacity keyframes).
