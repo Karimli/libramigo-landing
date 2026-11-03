@@ -31,6 +31,7 @@
   --track-4: #C9D6D2;          /* roadmap line, stage 4 */
   --badge-mint: #E3EDE9;       /* delivery badge background */
   --error-on-dark: #F6C2B9;    /* form error text */
+  --placeholder-on-paper: #5A6D69; /* input placeholder, 4.7:1 on --paper */
 
   /* Typography */
   --font-sans: 'Manrope', 'Segoe UI', Arial, sans-serif;
