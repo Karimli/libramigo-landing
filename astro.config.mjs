@@ -3,8 +3,8 @@ import { defineConfig } from 'astro/config';
 import { languages, defaultLang } from './src/i18n/languages.mjs';
 
 export default defineConfig({
-  // TODO: set the production domain once it is decided (needed for hreflang/OG absolute URLs).
-  // site: 'https://example.az',
+  // Production domain (not decided yet). Needed for absolute canonical/hreflang/Open Graph URLs.
+  site: process.env.SITE_URL || undefined,
   trailingSlash: 'never',
   build: { format: 'directory' },
   i18n: {

@@ -1,0 +1,43 @@
+---
+import { languages, defaultLang, useTranslations, type Lang } from '../i18n';
+import { config } from '../config';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Absolute URLs when SITE_URL is set; root-relative otherwise (build warns below).
+const url = (path: string) => (Astro.site ? new URL(path, Astro.site).href : path);
+if (!Astro.site && lang === defaultLang) {
+  console.warn('[seo] SITE_URL is not set – canonical, hreflang and og:url are relative (search engines expect absolute URLs).');
+}
+if (!config.ogImage && lang === defaultLang) {
+  console.warn('[seo] PUBLIC_OG_IMAGE is not set – share cards have no image.');
+}
+
+const current = languages.find((l) => l.code === lang)!;
+const title = t('meta.title');
+const description = t('meta.description');
+---
+<link rel="canonical" href={url(`/${lang}`)} data-lang-url />
+{languages.map((l) => <link rel="alternate" hreflang={l.code} href={url(`/${l.code}`)} />)}
+<link rel="alternate" hreflang="x-default" href={url(`/${defaultLang}`)} />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={t('brand.name')} />
+<meta property="og:title" content={title} data-i18n-attr="content:meta.title" />
+<meta property="og:description" content={description} data-i18n-attr="content:meta.description" />
+<meta property="og:url" content={url(`/${lang}`)} data-lang-url />
+<meta property="og:locale" content={current.ogLocale} />
+{languages.filter((l) => l.code !== lang).map((l) => <meta property="og:locale:alternate" content={l.ogLocale} />)}
+{/* OG image: placeholder until the designer delivers it (set PUBLIC_OG_IMAGE, 1200×630). */}
+{config.ogImage && <meta property="og:image" content={config.ogImage} />}
+{config.ogImage && <meta property="og:image:width" content="1200" />}
+{config.ogImage && <meta property="og:image:height" content="630" />}
+
+<!-- Twitter / X card -->
+<meta name="twitter:card" content={config.ogImage ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={title} data-i18n-attr="content:meta.title" />
+<meta name="twitter:description" content={description} data-i18n-attr="content:meta.description" />
+{config.ogImage && <meta name="twitter:image" content={config.ogImage} />}

@@ -57,6 +57,11 @@ function render(lang: string, dict: Dict) {
     if (a.dataset.langLink === lang) a.setAttribute('aria-current', 'true');
     else a.removeAttribute('aria-current');
   });
+  // canonical / og:url: swap the trailing language segment
+  document.querySelectorAll<HTMLElement>('[data-lang-url]').forEach((el) => {
+    const attr = el.hasAttribute('href') ? 'href' : 'content';
+    el.setAttribute(attr, el.getAttribute(attr)!.replace(/\/[^/]+$/, `/${lang}`));
+  });
   root.lang = lang;
   if (dict['meta.title']) document.title = dict['meta.title'];
 }

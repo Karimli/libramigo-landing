@@ -1,5 +1,7 @@
 ---
 import { codes, defaultLang, storageKey } from '../i18n/languages.mjs';
+
+const url = (path: string) => (Astro.site ? new URL(path, Astro.site).href : path);
 ---
 <!doctype html>
 <html lang={defaultLang}>
@@ -7,6 +9,11 @@ import { codes, defaultLang, storageKey } from '../i18n/languages.mjs';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Libramigo</title>
+    <!-- Language picker page: not indexed itself; points crawlers to the localized pages. -->
+    <meta name="robots" content="noindex, follow" />
+    {codes.map((c) => <link rel="alternate" hreflang={c} href={url(`/${c}`)} />)}
+    <link rel="alternate" hreflang="x-default" href={url(`/${defaultLang}`)} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- Language detection: 1) stored choice, 2) browser languages, 3) default. -->
     <script is:inline define:vars={{ codes, defaultLang, storageKey }}>
       var lang = null;
