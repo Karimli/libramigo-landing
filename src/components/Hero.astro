@@ -1,0 +1,192 @@
+---
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Shelf spines – sizes and colours from reference/AZ.dc.html.
+const spines = [
+  { key: 'novel',      w: 46, h: 250, bg: 'var(--red)',         fg: 'var(--paper)',     shade: 0.22 },
+  { key: 'poetry',     w: 34, h: 200, bg: 'var(--amber)',       fg: 'var(--green-900)', shade: 0.18 },
+  { key: 'history',    w: 56, h: 290, bg: 'var(--paper)',       fg: 'var(--green-900)', shade: 0.14 },
+  { key: 'philosophy', w: 40, h: 230, bg: 'var(--green-500)',   fg: 'var(--paper)',     shade: 0.22 },
+  { key: 'tales',      w: 50, h: 270, bg: 'var(--red-dark)',    fg: 'var(--paper)',     shade: 0.25 },
+  { key: 'drama',      w: 38, h: 210, bg: 'var(--paper-line)',  fg: 'var(--green-900)', shade: 0.14 },
+  { key: 'biography',  w: 54, h: 300, bg: 'var(--spine-green)', fg: 'var(--paper)',     shade: 0.25, outlined: true },
+  { key: 'scifi',      w: 44, h: 240, bg: 'var(--spine-ochre)', fg: 'var(--green-900)', shade: 0.18 },
+  { key: 'essays',     w: 48, h: 260, bg: 'var(--green-300)',   fg: 'var(--green-900)', shade: 0.16, lean: true },
+];
+---
+<section id="top" class="hero">
+  <div class="hero-row">
+    <div class="hero-text">
+      <h1 class="fade" data-i18n="hero.title">{t('hero.title')}</h1>
+      <p class="fade lead" style="animation-delay: 150ms" data-i18n="hero.subtitle">{t('hero.subtitle')}</p>
+      <div class="fade cta-row" style="animation-delay: 300ms">
+        <a href="#waitlist" class="btn btn-lg" data-i18n="hero.cta">{t('hero.cta')}</a>
+        <span class="note" data-i18n="hero.note">{t('hero.note')}</span>
+      </div>
+    </div>
+
+    <div class="shelf-art" aria-hidden="true">
+      <div class="card quote-card">
+        <div class="quote-meta">
+          <span class="avatar"></span>
+          <span data-i18n="hero.quoteAuthor">{t('hero.quoteAuthor')}</span>
+        </div>
+        <p class="serif quote" data-i18n="hero.quote">{t('hero.quote')}</p>
+      </div>
+      <div class="shelf">
+        {spines.map((s, i) => (
+          <div
+            class:list={['rise', 'slot', { 'slot-lean': s.lean }]}
+            style={`--w: ${s.w}px; animation-delay: ${i * 80}ms`}
+          >
+            <div
+              class:list={['spine', { lean: s.lean, outlined: s.outlined }]}
+              style={`--h: ${s.h}px; --bg: ${s.bg}; --fg: ${s.fg}; --shade: rgba(0,0,0,${s.shade})`}
+            >
+              <span data-i18n={`hero.genres.${s.key}`}>{t(`hero.genres.${s.key}`)}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+  <div class="shelf-board" aria-hidden="true"></div>
+</section>
+
+<style>
+  .hero {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 48px var(--gutter) 0;
+  }
+  .hero-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 40px;
+  }
+  .hero-text {
+    flex: 1 1 480px;
+    min-width: 0;
+    padding-bottom: 36px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(46px, 6.2vw, 88px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    font-weight: 650;
+    font-variation-settings: 'opsz' 72;
+  }
+  .lead {
+    margin: 28px 0 0;
+    max-width: 34em;
+    font-size: 21px;
+    line-height: 1.6;
+    color: var(--text-on-dark);
+  }
+  .cta-row {
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+  }
+  .note {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-on-dark-muted);
+    max-width: 18em;
+  }
+
+  /* Illustration */
+  .shelf-art {
+    flex: 1 1 440px;
+    min-width: 0;
+    position: relative;
+    height: 400px;
+  }
+  .quote-card {
+    position: absolute;
+    top: 0;
+    right: 6%;
+    z-index: 2;
+    width: 270px;
+    max-width: 100%;
+    padding: 18px 20px 20px;
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--green-900);
+    box-shadow: 0 18px 40px rgba(5, 25, 23, 0.45);
+  }
+  .quote-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-on-paper-muted);
+  }
+  .avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--red);
+    display: inline-block;
+    flex: 0 0 auto;
+  }
+  .quote {
+    margin: 14px 0 0;
+    font-size: 20px;
+    line-height: 1.4;
+    font-style: italic;
+  }
+  .shelf {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 320px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    padding: 0 4px;
+  }
+  /* Slots keep reference widths on wide screens and shrink proportionally on narrow ones. */
+  .slot {
+    flex: 0 1 var(--w);
+    min-width: 0;
+  }
+  .slot-lean { margin-left: 14px; }
+  .spine {
+    width: 100%;
+    height: var(--h);
+    background: var(--bg);
+    color: var(--fg);
+    border-radius: 3px 3px 1px 1px;
+    box-shadow: inset 0 22px 0 -16px var(--shade), inset 0 -22px 0 -16px var(--shade);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .spine.outlined { border: 1px solid rgba(244, 237, 225, 0.28); }
+  .spine.lean { transform-origin: bottom left; }
+  .spine span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 15px;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .shelf-board {
+    height: 16px;
+    border-radius: 2px;
+    background: var(--amber);
+    box-shadow: 0 10px 0 -2px var(--green-900);
+  }
+</style>

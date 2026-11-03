@@ -1,9 +1,31 @@
-/* All keyframes live here (filled in during step 11). */
+/* Keyframes and motion utilities – names match reference/*.dc.html. */
 
-/* Language switch: text fades out/in (filter is used so it never fights opacity keyframes). */
-[data-i18n] { transition: filter 180ms ease; }
+@keyframes lm-rise { from { transform: translateY(105%); } to { transform: translateY(0); } }
+@keyframes lm-fade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes lm-card {
+  from { opacity: 0; transform: translateY(28px) rotate(-3deg); }
+  to { opacity: 1; transform: translateY(0) rotate(-3deg); }
+}
+
+/* Hero */
+.rise { animation: lm-rise 900ms var(--ease-out) both; }
+.fade { animation: lm-fade 800ms var(--ease-out) both; }
+.card { animation: lm-card 900ms var(--ease-out) 1300ms both; }
+.spine { transition: transform 350ms var(--ease-out); }
+.spine:hover { transform: translateY(-16px); }
+.spine.lean { transform: rotate(-7deg); }
+.spine.lean:hover { transform: rotate(-7deg) translateY(-16px); }
+
+/* Language switch: text fades out/in (filter is used so it never fights opacity keyframes).
+   :where() keeps specificity at 0 so elements with their own transition (e.g. .btn) win;
+   such elements must list `filter 180ms ease` in their own transition. */
+:where([data-i18n]) { transition: filter 180ms ease; }
 .i18n-out [data-i18n] { filter: opacity(0); }
 
+/* Reduced motion: no animation or transition anywhere, content in its final state. */
 @media (prefers-reduced-motion: reduce) {
-  [data-i18n] { transition: none; }
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

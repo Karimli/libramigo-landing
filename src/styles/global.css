@@ -52,7 +52,7 @@ a:hover { color: var(--amber); }
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 200ms ease, background-color 200ms ease;
+  transition: transform 200ms ease, background-color 200ms ease, filter 180ms ease;
 }
 .btn:hover {
   transform: translateY(-2px);
