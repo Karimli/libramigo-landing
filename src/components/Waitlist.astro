@@ -1,0 +1,113 @@
+---
+import { useTranslations, type Lang } from '../i18n';
+import { config } from '../config';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const endpoint = config.waitlistEndpoint;
+---
+<section id="waitlist" class="waitlist">
+  <div class="inner">
+    <h2 data-i18n="waitlist.title">{t('waitlist.title')}</h2>
+    <p class="lead" data-i18n="waitlist.subtitle">{t('waitlist.subtitle')}</p>
+
+    <!-- Without JS the form posts directly to the endpoint (if the backend accepts form posts). -->
+    <form
+      class="form"
+      method="post"
+      action={endpoint || undefined}
+      novalidate
+      data-waitlist-form
+      data-endpoint={endpoint}
+    >
+      <label for="waitlist-email" data-i18n="waitlist.label">{t('waitlist.label')}</label>
+      <div class="row">
+        <input
+          id="waitlist-email"
+          name="email"
+          type="text"
+          inputmode="email"
+          autocomplete="email"
+          spellcheck="false"
+          autocapitalize="off"
+          required
+          placeholder={t('waitlist.placeholder')}
+          data-i18n-attr="placeholder:waitlist.placeholder"
+          aria-describedby="waitlist-privacy"
+        />
+        <button type="submit" class="btn submit" data-i18n="waitlist.submit">{t('waitlist.submit')}</button>
+      </div>
+      <input type="hidden" name="lang" value={lang} data-i18n-lang />
+      <input type="hidden" name="source" value="landing" />
+      <div aria-live="polite" class="errors">
+        <p id="waitlist-error-invalid" class="error" hidden data-error="invalid" data-i18n="waitlist.errorInvalid">{t('waitlist.errorInvalid')}</p>
+        <p id="waitlist-error-network" class="error" hidden data-error="network" data-i18n="waitlist.errorNetwork">{t('waitlist.errorNetwork')}</p>
+      </div>
+      <p id="waitlist-privacy" class="privacy" data-i18n="waitlist.privacy">{t('waitlist.privacy')}</p>
+    </form>
+
+    <div class="done" role="status" hidden data-waitlist-done>
+      <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+        <circle cx="22" cy="22" r="21" fill="#E9A83A"></circle>
+        <path class="check" d="M13 23 l6 6 l12 -13" fill="none" stroke="#0A2523" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <p data-i18n="waitlist.success">{t('waitlist.success')}</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initWaitlist } from '../scripts/waitlist';
+  initWaitlist();
+</script>
+
+<style>
+  .waitlist {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 120px var(--gutter) 128px;
+  }
+  .inner { max-width: 720px; }
+  h2 {
+    margin: 0;
+    font-size: clamp(36px, 4.4vw, 62px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 650;
+  }
+  .lead { margin: 22px 0 0; font-size: 21px; line-height: 1.6; color: var(--text-on-dark); }
+  .form { margin-top: 36px; }
+  label { display: block; font-size: 16px; font-weight: 600; color: var(--paper); }
+  .row { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 12px; }
+  input[type='text'] {
+    flex: 1 1 280px;
+    min-width: 0;
+    height: 58px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: var(--radius-btn);
+    background: var(--paper);
+    color: var(--green-900);
+    font-family: inherit;
+    font-size: 19px;
+  }
+  input::placeholder { color: #6B7F7B; opacity: 1; }
+  .submit { height: 58px; padding: 0 28px; font-size: 19px; }
+  .submit[aria-busy='true'] { cursor: progress; opacity: 0.8; }
+  .error { margin: 12px 0 0; font-size: 17px; color: var(--error-on-dark); }
+  .privacy { margin: 18px 0 0; font-size: 15px; line-height: 1.5; color: var(--text-on-dark-muted); }
+  .done {
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 24px;
+    border-radius: var(--radius-btn);
+    background: var(--paper);
+    color: var(--green-900);
+  }
+  .done[hidden], .form[hidden], .error[hidden] { display: none; }
+  .done svg { flex: 0 0 auto; }
+  .done p { margin: 0; font-size: 19px; line-height: 1.5; }
+</style>

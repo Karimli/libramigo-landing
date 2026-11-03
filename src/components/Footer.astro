@@ -1,0 +1,35 @@
+---
+import { useTranslations, type Lang } from '../i18n';
+import { config } from '../config';
+
+interface Props { lang: Lang }
+const t = useTranslations(Astro.props.lang);
+const email = config.contactEmail;
+---
+<footer class="site-footer">
+  <div class="inner">
+    <span data-i18n="footer.copyright">{t('footer.copyright')}</span>
+    <span>
+      <span data-i18n="footer.contactLabel">{t('footer.contactLabel')}</span>{' '}
+      {email
+        ? <a href={`mailto:${email}`}>{email}</a>
+        : <span data-i18n="footer.contactPlaceholder">{t('footer.contactPlaceholder')}</span>}
+    </span>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--green-900); color: var(--text-on-dark-muted); }
+  .inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 36px var(--gutter);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 16px;
+  }
+  a { color: var(--text-on-dark-muted); }
+  a:hover { color: var(--amber); }
+</style>

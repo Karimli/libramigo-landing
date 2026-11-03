@@ -122,12 +122,14 @@
     "placeholder": "name@example.com",
     "submit": "Join the waitlist",
     "errorInvalid": "Enter a valid email address, like name@example.com.",
+    "errorNetwork": "We couldn’t send that. Check your connection and try again in a moment.",
     "privacy": "We’ll only use your email for Libramigo updates.",
     "success": "You’re on the waitlist. We’ll email you when we open."
   },
   "footer": {
     "copyright": "© 2026 Libramigo",
-    "contactLabel": "Contact:"
+    "contactLabel": "Contact:",
+    "contactPlaceholder": "[email address]"
   },
   "meta": {
     "title": "Libramigo",

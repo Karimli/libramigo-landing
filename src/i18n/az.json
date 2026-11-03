@@ -122,12 +122,14 @@
     "placeholder": "ad@numune.az",
     "submit": "Siyahıya yazıl",
     "errorInvalid": "E-poçt ünvanını düzgün yaz, məsələn ad@numune.az.",
+    "errorNetwork": "Göndərmək alınmadı. İnternet bağlantını yoxla və bir az sonra yenidən cəhd et.",
     "privacy": "E-poçtun yalnız Libramigo xəbərləri üçün istifadə olunacaq.",
     "success": "Siyahıya yazıldın. Platforma açılanda sənə yazacağıq."
   },
   "footer": {
     "copyright": "© 2026 Libramigo",
-    "contactLabel": "Əlaqə:"
+    "contactLabel": "Əlaqə:",
+    "contactPlaceholder": "[e-poçt ünvanı]"
   },
   "meta": {
     "title": "Libramigo",

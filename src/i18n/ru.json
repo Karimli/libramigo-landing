@@ -122,12 +122,14 @@
     "placeholder": "name@example.az",
     "submit": "Записаться в список",
     "errorInvalid": "Введите корректный адрес, например name@example.az.",
+    "errorNetwork": "Не удалось отправить. Проверьте подключение к интернету и попробуйте ещё раз чуть позже.",
     "privacy": "Ваш адрес будет использоваться только для новостей Libramigo.",
     "success": "Вы в списке. Мы напишем, когда платформа откроется."
   },
   "footer": {
     "copyright": "© 2026 Libramigo",
-    "contactLabel": "Контакты:"
+    "contactLabel": "Контакты:",
+    "contactPlaceholder": "[адрес почты]"
   },
   "meta": {
     "title": "Libramigo",
