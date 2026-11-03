@@ -5,3 +5,7 @@ dist/
 .env.*
 !.env.example
 .DS_Store
+
+# Internal brief and design-tool exports: kept locally, not published
+LANDING_BRIEF.md
+reference/

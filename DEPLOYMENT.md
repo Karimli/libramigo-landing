@@ -7,7 +7,8 @@ GitHub Pages on every push to `main` ([`.github/workflows/deploy.yml`](.github/w
 
 1. Create a GitHub repository and push this project to `main`.
    GitHub Pages is free for **public** repositories; a private repository needs a paid plan.
-   Note that a public repository also publishes `LANDING_BRIEF.md` and `reference/`.
+   The internal brief (`LANDING_BRIEF.md`) and design exports (`reference/`) are git-ignored
+   and never published.
 2. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
 3. **Settings → Secrets and variables → Actions → Variables** (all optional, all public values):
 
