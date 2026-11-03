@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return ['az', 'ru', 'en'].map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+---
+<BaseLayout lang={lang!} title="Libramigo">
+  <main class="container"></main>
+</BaseLayout>

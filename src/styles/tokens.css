@@ -1,0 +1,49 @@
+/* Design tokens – source: LANDING_BRIEF.md §3 and reference/*.dc.html */
+:root {
+  /* Greens */
+  --green-900: #0A2523;
+  --green-800: #0F3633;
+  --green-700: #12403C;
+  --green-500: #2C6B63;
+  --green-300: #8FB5AC;
+
+  /* Paper */
+  --paper: #F4EDE1;
+  --paper-card: #FBF7F0;
+  --paper-line: #D9C9A8;
+
+  /* Accents */
+  --amber: #E9A83A;
+  --amber-hover: #F2BA55;
+  --red: #B8323F;
+  --red-dark: #7A1F2B;
+
+  /* Text */
+  --text-on-dark: #D9E6E2;
+  --text-on-dark-muted: #B9D3CC;
+  --text-on-paper-muted: #3F5A55;
+
+  /* Extra colours used in the reference but not listed in the brief table */
+  --spine-green: #1D5A52;      /* hero shelf spine */
+  --spine-ochre: #C9852C;      /* hero shelf spine */
+  --track-2: #6E8A84;          /* roadmap line, stage 2 */
+  --track-3: #9DB3AE;          /* roadmap line, stage 3 */
+  --track-4: #C9D6D2;          /* roadmap line, stage 4 */
+  --badge-mint: #E3EDE9;       /* delivery badge background */
+  --error-on-dark: #F6C2B9;    /* form error text */
+
+  /* Typography */
+  --font-sans: 'Manrope', 'Segoe UI', Arial, sans-serif;
+  --font-serif: 'Literata', Georgia, serif;
+
+  /* Layout */
+  --content-max: 1240px;
+  --gutter: 5%;
+  --radius-card: 16px;
+  --radius-card-sm: 14px;
+  --radius-btn: 6px;
+  --btn-min-height: 48px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+}

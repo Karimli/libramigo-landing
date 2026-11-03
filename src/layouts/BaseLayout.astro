@@ -1,0 +1,35 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import '../styles/animations.css';
+
+interface Props {
+  lang: string;
+  title: string;
+  description?: string;
+}
+
+const { lang, title, description = '' } = Astro.props;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- css2 API serves latin, latin-ext and cyrillic subsets via unicode-range -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..800;1,7..72,400..800&family=Manrope:wght@400..800&display=swap"
+    />
+    <slot name="head" />
+    <!-- Analytics placeholder: add tracking snippet here once approved (see brief step 13). -->
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
