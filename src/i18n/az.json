@@ -1,0 +1,139 @@
+{
+  "brand": {
+    "name": "Libramigo"
+  },
+  "nav": {
+    "how": "Necə işləyir",
+    "roadmap": "Yol xəritəsi",
+    "langLabel": "Dil",
+    "cta": "Siyahıya yazıl"
+  },
+  "hero": {
+    "title": "Azərbaycan oxucularının ortaq rəfi",
+    "subtitle": "Oxuduğun kitabları qeyd et, rəy və sitat paylaş, növbəti kitabını oxucuların tövsiyəsi ilə seç və elə buradan sifariş et.",
+    "cta": "Gözləmə siyahısına yazıl",
+    "note": "Azərbaycan və rus dillərində. Bütün Azərbaycana çatdırılma.",
+    "quoteAuthor": "@oxucu sitat paylaşdı",
+    "quote": "“Yaxşı kitab son səhifədən sonra da insanla qalır.”",
+    "genres": {
+      "novel": "Roman",
+      "poetry": "Poeziya",
+      "history": "Tarix",
+      "philosophy": "Fəlsəfə",
+      "tales": "Nağıllar",
+      "drama": "Dram",
+      "biography": "Bioqrafiya",
+      "scifi": "Fantastika",
+      "essays": "Esse"
+    }
+  },
+  "problem": {
+    "title": "Oxuduğun kitab haqqında kiminlə danışırsan?",
+    "text": "Azərbaycanda oxucuların bir araya gəldiyi yerli platforma yoxdur. Tövsiyələr dağınıqdır, rəylər müxtəlif dillərdə, müxtəlif yerlərdə qalır. Kitab almaq isə regionlarda hələ də çətindir."
+  },
+  "how": {
+    "eyebrow": "Üç addım",
+    "title": "Libramigo necə işləyir",
+    "subtitle": "Kitabı tapmaqdan onu əlinə almağa qədər hər şey bir platformada.",
+    "step1": {
+      "title": "Oxu və qeyd et",
+      "statusReading": "Oxuyuram",
+      "statusRead": "Oxudum",
+      "statusWant": "Oxuyacağam",
+      "text": "Oxuduğun, hazırda oxuduğun və oxumaq istədiyin kitabları öz rəfinə əlavə et. Oxu tarixçən həmişə səninlədir."
+    },
+    "step2": {
+      "title": "Paylaş",
+      "review": "“Bu kitabı bir nəfəsə oxudum. Son səhifədən sonra da düşündürür.”",
+      "like": "Bəyən",
+      "reply": "Cavab yaz",
+      "text": "Rəy yaz, sevdiyin sitatı paylaş, zövqünə yaxın oxucuları izlə və onların tövsiyələrini kəşf et."
+    },
+    "step3": {
+      "title": "Al",
+      "delivery": "Bütün Azərbaycana",
+      "addToCart": "Səbətə at",
+      "text": "Bəyəndiyin kitabı elə səhifəsindən sifariş et. Kartla və ya Bakıda nağd ödə, çatdırılma bütün Azərbaycana."
+    }
+  },
+  "whoFor": {
+    "eyebrow": "Oxucular üçün",
+    "title": "Kimin üçündür",
+    "avid": {
+      "title": "Çox oxuyanlar",
+      "text": "Oxuduqlarını qeyd edən və fikrini bölüşmək istəyənlər üçün.",
+      "benefit1": "Bütün oxu tarixçən bir yerdə",
+      "benefit2": "Rəy və sitatlarını paylaş",
+      "benefit3": "Zövqünə yaxın oxucuları tap"
+    },
+    "youth": {
+      "title": "Gənclər və tələbələr",
+      "text": "Sitat paylaşmağı və yeni kitab kəşf etməyi sevənlər üçün.",
+      "benefit1": "Sevdiyin sitatları topla və paylaş",
+      "benefit2": "Dostlarının nə oxuduğunu izlə",
+      "benefit3": "Yeni kitabları icmadan kəşf et"
+    },
+    "everyone": {
+      "title": "Hər bir oxucu",
+      "text": "Növbəti kitabını etibarlı tövsiyə ilə seçmək istəyən hər kəs üçün.",
+      "benefit1": "Real oxucuların rəyləri",
+      "benefit2": "Azərbaycan və rus dillərində",
+      "benefit3": "Bütün Azərbaycana çatdırılma"
+    }
+  },
+  "roadmap": {
+    "eyebrow": "Mərhələlər",
+    "title": "Yol xəritəsi",
+    "subtitle": "Libramigo addım-addım böyüyür: əvvəlcə mağaza, sonra oxucu platforması, ardınca mobil tətbiq.",
+    "stage1": {
+      "when": "İndi",
+      "status": "Davam edir",
+      "title": "İdeya mərhələsi",
+      "text": "Gözləmə siyahısı açıqdır. İlk oxucuları toplayırıq."
+    },
+    "stage2": {
+      "when": "2027, yaz",
+      "status": "Növbəti",
+      "title": "Onlayn kitab mağazası",
+      "item1": "Kataloq və axtarış",
+      "item2": "Kartla və nağd ödəniş",
+      "item3": "Bütün Azərbaycana çatdırılma"
+    },
+    "stage3": {
+      "when": "2027, payız",
+      "status": "Planlaşdırılır",
+      "title": "Oxucu platforması",
+      "item1": "Rəylər və sitatlar",
+      "item2": "Oxucu profilləri və rəflər",
+      "item3": "Oxuculardan tövsiyələr"
+    },
+    "stage4": {
+      "when": "2028, yaz",
+      "status": "Planlaşdırılır",
+      "title": "Mobil tətbiq",
+      "item1": "Mağaza və platforma bir tətbiqdə",
+      "item2": "Rəfin və sifarişlərin telefonunda"
+    }
+  },
+  "waitlist": {
+    "title": "İlk oxuculardan biri ol",
+    "subtitle": "Siyahıya yazıl, platforma açılanda ilk sən xəbər tut.",
+    "label": "E-poçt ünvanı",
+    "placeholder": "ad@numune.az",
+    "submit": "Siyahıya yazıl",
+    "errorInvalid": "E-poçt ünvanını düzgün yaz, məsələn ad@numune.az.",
+    "privacy": "E-poçtun yalnız Libramigo xəbərləri üçün istifadə olunacaq.",
+    "success": "Siyahıya yazıldın. Platforma açılanda sənə yazacağıq."
+  },
+  "footer": {
+    "copyright": "© 2026 Libramigo",
+    "contactLabel": "Əlaqə:"
+  },
+  "meta": {
+    "title": "Libramigo",
+    "description": "Oxuduğun kitabları qeyd et, rəy və sitat paylaş, növbəti kitabını oxucuların tövsiyəsi ilə seç və elə buradan sifariş et."
+  },
+  "i18n": {
+    "changed": "Dil dəyişdi: {language}"
+  }
+}

@@ -1,1 +1,9 @@
 /* All keyframes live here (filled in during step 11). */
+
+/* Language switch: text fades out/in (filter is used so it never fights opacity keyframes). */
+[data-i18n] { transition: filter 180ms ease; }
+.i18n-out [data-i18n] { filter: opacity(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-i18n] { transition: none; }
+}

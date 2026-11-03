@@ -1,15 +1,31 @@
 ---
-// Root redirects to the default locale. Step 2 adds stored / browser language detection.
+import { codes, defaultLang, storageKey } from '../i18n/languages.mjs';
 ---
 <!doctype html>
-<html lang="az">
+<html lang={defaultLang}>
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=/az" />
-    <link rel="canonical" href="/az" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Libramigo</title>
+    <!-- Language detection: 1) stored choice, 2) browser languages, 3) default. -->
+    <script is:inline define:vars={{ codes, defaultLang, storageKey }}>
+      var lang = null;
+      try {
+        var stored = localStorage.getItem(storageKey);
+        if (codes.indexOf(stored) > -1) lang = stored;
+      } catch (e) {}
+      if (!lang) {
+        var prefs = navigator.languages || [navigator.language || ''];
+        for (var i = 0; i < prefs.length && !lang; i++) {
+          var base = String(prefs[i]).toLowerCase().split('-')[0];
+          if (codes.indexOf(base) > -1) lang = base;
+        }
+      }
+      location.replace('/' + (lang || defaultLang) + location.hash);
+    </script>
+    <noscript><meta http-equiv="refresh" content={`0; url=/${defaultLang}`} /></noscript>
   </head>
   <body>
-    <a href="/az">Libramigo</a>
+    <a href={`/${defaultLang}`}>Libramigo</a>
   </body>
 </html>

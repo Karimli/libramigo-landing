@@ -1,0 +1,139 @@
+{
+  "brand": {
+    "name": "Libramigo"
+  },
+  "nav": {
+    "how": "How it works",
+    "roadmap": "Roadmap",
+    "langLabel": "Language",
+    "cta": "Join the waitlist"
+  },
+  "hero": {
+    "title": "A shared shelf for Azerbaijan’s readers",
+    "subtitle": "Log the books you read, share reviews and quotes, pick your next book from readers’ recommendations, and order it right here.",
+    "cta": "Join the waitlist",
+    "note": "In Azerbaijani and Russian. Delivery across Azerbaijan.",
+    "quoteAuthor": "@oxucu shared a quote",
+    "quote": "“A good book stays with you after the last page.”",
+    "genres": {
+      "novel": "Novel",
+      "poetry": "Poetry",
+      "history": "History",
+      "philosophy": "Philosophy",
+      "tales": "Tales",
+      "drama": "Drama",
+      "biography": "Biography",
+      "scifi": "Sci-fi",
+      "essays": "Essays"
+    }
+  },
+  "problem": {
+    "title": "Who do you talk to about the book you just read?",
+    "text": "Azerbaijan has no local platform where readers come together. Recommendations are scattered, reviews sit in different languages and places, and buying books outside Baku is still hard."
+  },
+  "how": {
+    "eyebrow": "Three steps",
+    "title": "How Libramigo works",
+    "subtitle": "From finding a book to holding it in your hands — all on one platform.",
+    "step1": {
+      "title": "Read and log",
+      "statusReading": "Reading",
+      "statusRead": "Read",
+      "statusWant": "Want to read",
+      "text": "Add the books you’ve read, the ones you’re reading now, and the ones you want to read to your shelf. Your reading history is always with you."
+    },
+    "step2": {
+      "title": "Share",
+      "review": "“Read it in one sitting. It stays with you long after the last page.”",
+      "like": "Like",
+      "reply": "Reply",
+      "text": "Write reviews, share favorite quotes, follow readers with similar taste and discover their recommendations."
+    },
+    "step3": {
+      "title": "Buy",
+      "delivery": "Across Azerbaijan",
+      "addToCart": "Add to cart",
+      "text": "Order a book straight from its page. Pay by card, or in cash in Baku, with delivery across Azerbaijan."
+    }
+  },
+  "whoFor": {
+    "eyebrow": "For readers",
+    "title": "Who it’s for",
+    "avid": {
+      "title": "Avid readers",
+      "text": "People who log what they read and want to share their take.",
+      "benefit1": "Your whole reading history in one place",
+      "benefit2": "Share reviews and quotes",
+      "benefit3": "Find readers with similar taste"
+    },
+    "youth": {
+      "title": "Young people and students",
+      "text": "Readers who love sharing quotes and discovering new books.",
+      "benefit1": "Collect and share your favorite quotes",
+      "benefit2": "See what your friends are reading",
+      "benefit3": "Discover new books through the community"
+    },
+    "everyone": {
+      "title": "Every reader",
+      "text": "Anyone who wants to choose their next book from trusted recommendations.",
+      "benefit1": "Reviews from real readers",
+      "benefit2": "In Azerbaijani and Russian",
+      "benefit3": "Delivery across Azerbaijan"
+    }
+  },
+  "roadmap": {
+    "eyebrow": "Milestones",
+    "title": "Roadmap",
+    "subtitle": "Libramigo grows step by step: first the bookstore, then the reader platform, then the mobile app.",
+    "stage1": {
+      "when": "Now",
+      "status": "In progress",
+      "title": "Idea stage",
+      "text": "The waitlist is open. We’re gathering our first readers."
+    },
+    "stage2": {
+      "when": "Spring 2027",
+      "status": "Next",
+      "title": "Online bookstore",
+      "item1": "Catalog and search",
+      "item2": "Card and cash payment",
+      "item3": "Delivery across Azerbaijan"
+    },
+    "stage3": {
+      "when": "Autumn 2027",
+      "status": "Planned",
+      "title": "Reader platform",
+      "item1": "Reviews and quotes",
+      "item2": "Reader profiles and shelves",
+      "item3": "Recommendations from readers"
+    },
+    "stage4": {
+      "when": "Spring 2028",
+      "status": "Planned",
+      "title": "Mobile app",
+      "item1": "Store and platform in one app",
+      "item2": "Your shelf and orders on your phone"
+    }
+  },
+  "waitlist": {
+    "title": "Be one of the first readers",
+    "subtitle": "Join the waitlist and be the first to know when we open.",
+    "label": "Email address",
+    "placeholder": "name@example.com",
+    "submit": "Join the waitlist",
+    "errorInvalid": "Enter a valid email address, like name@example.com.",
+    "privacy": "We’ll only use your email for Libramigo updates.",
+    "success": "You’re on the waitlist. We’ll email you when we open."
+  },
+  "footer": {
+    "copyright": "© 2026 Libramigo",
+    "contactLabel": "Contact:"
+  },
+  "meta": {
+    "title": "Libramigo",
+    "description": "Log the books you read, share reviews and quotes, pick your next book from readers’ recommendations, and order it right here."
+  },
+  "i18n": {
+    "changed": "Language changed: {language}"
+  }
+}
