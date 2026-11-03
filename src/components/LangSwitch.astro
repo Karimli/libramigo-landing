@@ -34,7 +34,9 @@ const t = useTranslations(lang);
     text-decoration: none;
     color: var(--paper);
   }
-  .lang-switch a[aria-current='true'] {
+  .lang-switch a:hover { color: var(--paper); }
+  .lang-switch a[aria-current='true'],
+  .lang-switch a[aria-current='true']:hover {
     background: var(--paper);
     color: var(--green-900);
     font-weight: 700;

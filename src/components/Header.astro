@@ -1,0 +1,53 @@
+---
+import LangSwitch from './LangSwitch.astro';
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<header class="site-header">
+  <a href="#top" class="logo serif">{t('brand.name')}</a>
+  <div class="actions">
+    <a href="#how" class="nav-link" data-i18n="nav.how">{t('nav.how')}</a>
+    <a href="#roadmap" class="nav-link" data-i18n="nav.roadmap">{t('nav.roadmap')}</a>
+    <LangSwitch lang={lang} />
+    <a href="#waitlist" class="btn btn-sm" data-i18n="nav.cta">{t('nav.cta')}</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 28px var(--gutter);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .logo {
+    font-size: 30px;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    color: var(--paper);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-link {
+    padding: 12px 14px;
+    font-size: 17px;
+    text-decoration: none;
+    color: var(--text-on-dark-muted);
+  }
+  /* Reference keeps link colours fixed on hover (inline colour wins over a:hover). */
+  .logo:hover { color: var(--paper); }
+  .nav-link:hover { color: var(--text-on-dark-muted); }
+</style>

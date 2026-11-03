@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import LangSwitch from '../../components/LangSwitch.astro';
+import Header from '../../components/Header.astro';
 import { codes, useTranslations } from '../../i18n';
 
 export function getStaticPaths() {
@@ -11,10 +11,8 @@ const { lang } = Astro.params as { lang: string };
 const t = useTranslations(lang);
 ---
 <BaseLayout lang={lang}>
-  <!-- TEMP (step 2): minimal markup to exercise i18n. Replaced by section components in steps 3–10. -->
-  <header class="container" style="padding-top: 28px; display: flex; gap: 16px; align-items: center">
-    <LangSwitch lang={lang} />
-  </header>
+  <Header lang={lang} />
+  <!-- TEMP: minimal markup to exercise i18n. Replaced by section components in steps 4–10. -->
   <main class="container">
     <h1 data-i18n="hero.title">{t('hero.title')}</h1>
     <p data-i18n="hero.subtitle">{t('hero.subtitle')}</p>
