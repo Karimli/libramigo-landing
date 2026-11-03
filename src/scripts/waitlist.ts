@@ -22,12 +22,17 @@ async function submit(endpoint: string, payload: WaitlistPayload): Promise<void>
     }
     throw new Error('Waitlist endpoint is not configured');
   }
+  // text/plain keeps this a CORS "simple request" (no preflight): Google Apps Script
+  // web apps cannot answer OPTIONS. The body is still JSON.
   const res = await fetch(endpoint, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  // Apps Script always answers 200, so the outcome is in the body: { ok: boolean }.
+  const data: unknown = await res.json().catch(() => null);
+  if (!data || (data as { ok?: unknown }).ok !== true) throw new Error('Waitlist backend rejected the submission');
 }
 
 export function initWaitlist() {
