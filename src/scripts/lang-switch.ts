@@ -115,9 +115,15 @@ history.replaceState({ lang: current }, '');
 
 // Reserve space: elements marked data-i18n-reserve get the height of their longest
 // translation at the current width, so switching language never shifts the layout.
+// Phones skip it (owner request): the extra space looked like a gap there.
+const noReserve = matchMedia('(max-width: 760px)');
 async function reserve() {
   const els = [...document.querySelectorAll<HTMLElement>('[data-i18n-reserve]')];
   if (!els.length) return;
+  if (noReserve.matches) {
+    els.forEach((el) => (el.style.minHeight = ''));
+    return;
+  }
   let dicts: Dict[];
   try {
     dicts = await Promise.all(codes.map(load));
