@@ -106,7 +106,7 @@ const current = languages.find((l) => l.code === lang)!;
     /* Dropdown list over the content. */
     :global(.js) .lang-switch {
       position: absolute;
-      top: calc(100% + 8px);
+      top: calc(100% + 4px);
       right: 0;
       z-index: 50;
       flex-direction: column;
@@ -123,6 +123,8 @@ const current = languages.find((l) => l.code === lang)!;
       transition: opacity 180ms ease, transform 180ms var(--ease-out), visibility 0s linear 180ms;
     }
     :global(.js) .lang-switch a { padding: 7px 12px; text-align: center; line-height: 1.2; }
+    /* Invisible bridge over the 4px gap so hover does not drop while moving to the list. */
+    :global(.js) .lang-switch::before { content: ''; position: absolute; left: 0; right: 0; top: -6px; height: 6px; }
     :global(.js) .is-open .lang-switch {
       opacity: 1;
       visibility: visible;
