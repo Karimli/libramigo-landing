@@ -55,9 +55,9 @@ const personas = [
   .inner {
     max-width: var(--content-max);
     margin: 0 auto;
-    padding: 120px var(--gutter);
+    padding: calc(120px * var(--space-scale)) var(--gutter);
   }
-  .personas { margin: 60px 0 0; }
+  .personas { margin: calc(60px * var(--space-scale)) 0 0; }
   .persona-wrap { min-width: 0; }
   .persona {
     height: 100%;
@@ -76,8 +76,8 @@ const personas = [
     align-items: center;
     justify-content: center;
   }
-  .persona h3 { margin: 26px 0 0; font-size: 26px; font-weight: 800; letter-spacing: -0.01em; }
-  .persona p { margin: 10px 0 0; font-size: 18px; line-height: 1.6; color: var(--text-on-dark); }
+  .persona h3 { margin: 26px 0 0; font-size: calc(26px * var(--type-scale)); font-weight: 800; letter-spacing: -0.01em; }
+  .persona p { margin: 10px 0 0; font-size: calc(18px * var(--type-scale)); line-height: 1.6; color: var(--text-on-dark); }
   .persona ul {
     margin: 22px 0 0;
     padding: 22px 0 0;
@@ -86,7 +86,7 @@ const personas = [
     display: flex;
     flex-direction: column;
     gap: 12px;
-    font-size: 17px;
+    font-size: calc(17px * var(--type-scale));
     line-height: 1.45;
   }
   .persona li { display: flex; gap: 10px; }

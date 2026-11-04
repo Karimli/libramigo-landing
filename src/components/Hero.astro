@@ -25,7 +25,6 @@ const spines = [
       <p class="fade lead" style="animation-delay: 150ms" data-i18n="hero.subtitle">{t('hero.subtitle')}</p>
       <div class="fade cta-row" style="animation-delay: 300ms">
         <a href="#waitlist" class="btn btn-lg" data-i18n="hero.cta">{t('hero.cta')}</a>
-        <span class="note" data-i18n="hero.note">{t('hero.note')}</span>
       </div>
     </div>
 
@@ -76,7 +75,7 @@ const spines = [
   }
   h1 {
     margin: 0;
-    font-size: clamp(46px, 6.2vw, 88px);
+    font-size: clamp(calc(46px * var(--type-scale)), calc(6.2vw * var(--type-scale)), calc(88px * var(--type-scale)));
     line-height: 1.02;
     letter-spacing: -0.025em;
     font-weight: 650;
@@ -85,7 +84,7 @@ const spines = [
   .lead {
     margin: 28px 0 0;
     max-width: 34em;
-    font-size: 21px;
+    font-size: calc(21px * var(--type-scale));
     line-height: 1.6;
     color: var(--text-on-dark);
   }
@@ -95,12 +94,6 @@ const spines = [
     flex-wrap: wrap;
     align-items: center;
     gap: 18px;
-  }
-  .note {
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--text-on-dark-muted);
-    max-width: 18em;
   }
 
   /* Illustration */
@@ -127,7 +120,7 @@ const spines = [
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 14px;
+    font-size: max(12px, calc(14px * var(--type-scale)));
     color: var(--text-on-paper-muted);
   }
   .avatar {
@@ -140,7 +133,7 @@ const spines = [
   }
   .quote {
     margin: 14px 0 0;
-    font-size: 20px;
+    font-size: calc(20px * var(--type-scale));
     line-height: 1.4;
     font-style: italic;
   }
@@ -178,7 +171,7 @@ const spines = [
   .spine span {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    font-size: 15px;
+    font-size: calc(15px * var(--type-scale));
     font-weight: 650;
     letter-spacing: 0.04em;
     white-space: nowrap;

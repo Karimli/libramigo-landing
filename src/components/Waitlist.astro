@@ -66,19 +66,19 @@ const endpoint = config.waitlistEndpoint;
   .waitlist {
     max-width: var(--content-max);
     margin: 0 auto;
-    padding: 120px var(--gutter) 128px;
+    padding: calc(120px * var(--space-scale)) var(--gutter) calc(128px * var(--space-scale));
   }
   .inner { max-width: 720px; }
   h2 {
     margin: 0;
-    font-size: clamp(36px, 4.4vw, 62px);
+    font-size: clamp(calc(36px * var(--type-scale)), calc(4.4vw * var(--type-scale)), calc(62px * var(--type-scale)));
     line-height: 1.08;
     letter-spacing: -0.02em;
     font-weight: 650;
   }
-  .lead { margin: 22px 0 0; font-size: 21px; line-height: 1.6; color: var(--text-on-dark); }
+  .lead { margin: 22px 0 0; font-size: calc(21px * var(--type-scale)); line-height: 1.6; color: var(--text-on-dark); }
   .form { margin-top: 36px; }
-  label { display: block; font-size: 16px; font-weight: 600; color: var(--paper); }
+  label { display: block; font-size: calc(16px * var(--type-scale)); font-weight: 600; color: var(--paper); }
   .row { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 12px; }
   input[type='text'] {
     flex: 1 1 280px;
@@ -90,13 +90,13 @@ const endpoint = config.waitlistEndpoint;
     background: var(--paper);
     color: var(--green-900);
     font-family: inherit;
-    font-size: 19px;
+    font-size: max(16px, calc(19px * var(--type-scale))); /* iOS zooms below 16px */
   }
   input::placeholder { color: var(--placeholder-on-paper); opacity: 1; }
-  .submit { height: 58px; padding: 0 28px; font-size: 19px; }
+  .submit { height: 58px; padding: 0 28px; font-size: calc(19px * var(--type-scale)); }
   .submit[aria-busy='true'] { cursor: progress; opacity: 0.8; }
-  .error { margin: 12px 0 0; font-size: 17px; color: var(--error-on-dark); }
-  .privacy { margin: 18px 0 0; font-size: 15px; line-height: 1.5; color: var(--text-on-dark-muted); }
+  .error { margin: 12px 0 0; font-size: calc(17px * var(--type-scale)); color: var(--error-on-dark); }
+  .privacy { margin: 18px 0 0; font-size: calc(15px * var(--type-scale)); line-height: 1.5; color: var(--text-on-dark-muted); }
   .done {
     margin-top: 36px;
     display: flex;
@@ -109,5 +109,5 @@ const endpoint = config.waitlistEndpoint;
   }
   .done[hidden], .form[hidden], .error[hidden] { display: none; }
   .done svg { flex: 0 0 auto; }
-  .done p { margin: 0; font-size: 19px; line-height: 1.5; }
+  .done p { margin: 0; font-size: calc(19px * var(--type-scale)); line-height: 1.5; }
 </style>

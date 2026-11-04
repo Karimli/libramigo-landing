@@ -58,8 +58,8 @@ a:hover { color: var(--amber); }
   background-color: var(--amber-hover);
   color: var(--green-900);
 }
-.btn-sm { min-height: 48px; padding: 0 22px; font-size: 17px; }
-.btn-lg { min-height: 56px; padding: 0 28px; font-size: 19px; }
+.btn-sm { min-height: 48px; padding: 0 22px; font-size: calc(17px * var(--type-scale)); }
+.btn-lg { min-height: 56px; padding: 0 28px; font-size: calc(19px * var(--type-scale)); }
 
 @media (prefers-reduced-motion: reduce) {
   .btn { transition: none; }
@@ -69,7 +69,7 @@ a:hover { color: var(--amber); }
 /* Section typography shared by How it works, Who it's for, Roadmap. */
 .eyebrow {
   margin: 0;
-  font-size: 15px;
+  font-size: calc(15px * var(--type-scale));
   font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -78,7 +78,7 @@ a:hover { color: var(--amber); }
 .paper .eyebrow { color: var(--red); }
 .section-title {
   margin: 14px 0 0;
-  font-size: clamp(36px, 4.4vw, 60px);
+  font-size: clamp(calc(36px * var(--type-scale)), calc(4.4vw * var(--type-scale)), calc(60px * var(--type-scale)));
   line-height: 1.06;
   letter-spacing: -0.025em;
   font-weight: 800;
@@ -86,7 +86,7 @@ a:hover { color: var(--amber); }
 .section-lead {
   margin: 22px 0 0;
   max-width: 34em;
-  font-size: 20px;
+  font-size: calc(20px * var(--type-scale));
   line-height: 1.6;
   color: var(--text-on-dark);
 }

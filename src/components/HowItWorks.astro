@@ -115,10 +115,10 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
   .how {
     max-width: var(--content-max);
     margin: 0 auto;
-    padding: 120px var(--gutter);
+    padding: calc(120px * var(--space-scale)) var(--gutter);
   }
   .how .section-title { max-width: 14em; }
-  .steps { margin: 64px 0 0; }
+  .steps { margin: calc(64px * var(--space-scale)) 0 0; }
   .steps > li { min-width: 0; }
   .step {
     height: 100%;
@@ -132,14 +132,14 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
   }
   .step-head { display: flex; align-items: baseline; gap: 16px; }
   .step-num {
-    font-size: 60px;
+    font-size: calc(60px * var(--type-scale));
     line-height: 1;
     font-style: italic;
     font-weight: 600;
     color: var(--amber);
   }
-  .step h3 { margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.01em; }
-  .step-text { margin: 0; font-size: 18px; line-height: 1.6; color: var(--text-on-dark); }
+  .step h3 { margin: 0; font-size: calc(26px * var(--type-scale)); font-weight: 800; letter-spacing: -0.01em; }
+  .step-text { margin: 0; font-size: calc(18px * var(--type-scale)); line-height: 1.6; color: var(--text-on-dark); }
 
   /* Mini interfaces (decorative) */
   .mini {
@@ -177,7 +177,7 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
     flex: 0 0 auto;
     padding: 6px 11px;
     border-radius: 999px;
-    font-size: 12px;
+    font-size: max(12px, calc(12px * var(--type-scale)));
     font-weight: 800;
   }
   .pill-amber { background: var(--amber); }
@@ -205,14 +205,14 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
     margin: 2px 0 0;
     padding-left: 14px;
     border-left: 3px solid var(--red);
-    font-size: 19px;
+    font-size: calc(19px * var(--type-scale));
     line-height: 1.45;
     font-style: italic;
   }
   .review-actions {
     display: flex;
     gap: 18px;
-    font-size: 13px;
+    font-size: max(12px, calc(13px * var(--type-scale)));
     font-weight: 700;
     color: var(--text-on-paper-muted);
   }
@@ -241,7 +241,7 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
     border-radius: 999px;
     background: var(--badge-mint);
     color: var(--green-700);
-    font-size: 12px;
+    font-size: max(12px, calc(12px * var(--type-scale)));
     font-weight: 800;
   }
   .add-to-cart {
@@ -250,7 +250,7 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
     padding: 9px 16px;
     border-radius: 8px;
     background: var(--amber);
-    font-size: 14px;
+    font-size: max(12px, calc(14px * var(--type-scale)));
     font-weight: 800;
   }
 </style>

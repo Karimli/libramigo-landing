@@ -37,6 +37,10 @@
   --font-sans: 'Manrope', 'Segoe UI', Arial, sans-serif;
   --font-serif: 'Literata', Georgia, serif;
 
+  /* Scale: 1 = reference design. Owner asked for ~15% smaller text (and matching section spacing). */
+  --type-scale: 0.85;
+  --space-scale: 0.85;
+
   /* Layout */
   --content-max: 1240px;
   --gutter: 5%;

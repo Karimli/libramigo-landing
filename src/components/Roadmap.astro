@@ -51,10 +51,10 @@ const stages = [
   .inner {
     max-width: var(--content-max);
     margin: 0 auto;
-    padding: 120px var(--gutter);
+    padding: calc(120px * var(--space-scale)) var(--gutter);
   }
   .timeline {
-    margin: 72px 0 0;
+    margin: calc(72px * var(--space-scale)) 0 0;
     padding: 0;
     list-style: none;
     display: grid;
@@ -97,12 +97,12 @@ const stages = [
     justify-content: space-between;
     gap: 8px;
   }
-  .when { font-size: 16px; font-weight: 800; color: var(--red); }
-  .pill { padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+  .when { font-size: calc(16px * var(--type-scale)); font-weight: 800; color: var(--red); }
+  .pill { padding: 5px 10px; border-radius: 999px; font-size: max(12px, calc(12px * var(--type-scale))); font-weight: 800; }
   .pill-dark { background: var(--green-700); color: var(--paper); }
   .pill-amber { background: var(--amber); color: var(--green-900); }
   .pill-outline { padding: 4px 9px; border: 1.5px solid var(--green-900); color: var(--green-900); }
-  .stage-card h3 { margin: 12px 0 0; font-size: 24px; line-height: 1.25; font-weight: 800; }
-  .stage-card p { margin: 10px 0 0; font-size: 16px; line-height: 1.55; color: var(--text-on-paper-muted); }
-  .stage-card ul { margin: 12px 0 0; padding: 0 0 0 18px; font-size: 16px; line-height: 1.6; color: var(--text-on-paper-muted); }
+  .stage-card h3 { margin: 12px 0 0; font-size: calc(24px * var(--type-scale)); line-height: 1.25; font-weight: 800; }
+  .stage-card p { margin: 10px 0 0; font-size: calc(16px * var(--type-scale)); line-height: 1.55; color: var(--text-on-paper-muted); }
+  .stage-card ul { margin: 12px 0 0; padding: 0 0 0 18px; font-size: calc(16px * var(--type-scale)); line-height: 1.6; color: var(--text-on-paper-muted); }
 </style>
