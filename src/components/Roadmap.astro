@@ -4,12 +4,12 @@ import { useTranslations, type Lang } from '../i18n';
 interface Props { lang: Lang }
 const t = useTranslations(Astro.props.lang);
 
-// Line colour, dot style and status pill per stage (reference/AZ.dc.html).
+// Stages as book chapters. Odd chapters sit above the line, even ones below (desktop zigzag).
 const stages = [
-  { n: 1, track: 'var(--green-900)', delay: 0,   dot: 'current', pill: 'pill-dark',    items: 0 },
-  { n: 2, track: 'var(--track-2)',   delay: 200, dot: 'next',    pill: 'pill-amber',   items: 3 },
-  { n: 3, track: 'var(--track-3)',   delay: 400, dot: 'later-1', pill: 'pill-outline', items: 3 },
-  { n: 4, track: 'var(--track-4)',   delay: 600, dot: 'later-2', pill: 'pill-outline', items: 2 },
+  { n: 1, current: true,  pill: 'pill-dark',    items: 0 },
+  { n: 2, current: false, pill: 'pill-amber',   items: 3 },
+  { n: 3, current: false, pill: 'pill-outline', items: 3 },
+  { n: 4, current: false, pill: 'pill-outline', items: 2 },
 ];
 ---
 <section id="roadmap" class="roadmap paper">
@@ -17,8 +17,8 @@ const stages = [
     <p class="eyebrow" data-i18n="roadmap.eyebrow">{t('roadmap.eyebrow')}</p>
     <h2 class="section-title" data-i18n="roadmap.title">{t('roadmap.title')}</h2>
     <p class="section-lead" data-i18n="roadmap.subtitle">{t('roadmap.subtitle')}</p>
-    <!-- Four stages always in one row; on narrow screens the row scrolls sideways and
-         bleeds to the right edge so the cut-off card shows there is more. -->
+    <!-- Desktop: zigzag of chapters along one line (solid up to "now", dashed after).
+         Narrow screens: one row that scrolls sideways and bleeds to the right edge. -->
     <div class="timeline-wrap">
     <div
       class="timeline-scroller"
@@ -27,14 +27,17 @@ const stages = [
       aria-label={t('roadmap.title')}
       data-i18n-attr="aria-label:roadmap.title"
     >
-    <ol class="timeline">
+    <ol class="chapter-list">
       {stages.map((s) => {
         const k = `roadmap.stage${s.n}`;
         return (
-          <li class="reveal stage">
-            <div class="track" aria-hidden="true" style={`background: ${s.track}; animation-delay: ${s.delay}ms`}></div>
-            <span class:list={['dot', `dot-${s.dot}`, { pulse: s.dot === 'current' }]} aria-hidden="true"></span>
-            <div class="lift stage-card">
+          <li class:list={['chapter', `chapter-${s.n}`, s.n % 2 ? 'up' : 'down', 'reveal', { current: s.current }]}>
+            <div class="chapter-label">
+              <span class="chapter-word" data-i18n="roadmap.chapter">{t('roadmap.chapter')}</span>
+              <span class="chapter-num serif">{s.n}</span>
+            </div>
+            <article class="lift stage-card">
+              {s.current && <span class="ribbon" aria-hidden="true"></span>}
               <div class="stage-top">
                 <span class="when" data-i18n={`${k}.when`}>{t(`${k}.when`)}</span>
                 <span class:list={['pill', s.pill]} data-i18n={`${k}.status`}>{t(`${k}.status`)}</span>
@@ -49,7 +52,9 @@ const stages = [
                   ))}
                 </ul>
               )}
-            </div>
+            </article>
+            <span class="stem" aria-hidden="true"></span>
+            <span class="dot-zone" aria-hidden="true"><span class:list={['dot', { pulse: s.current }]}></span></span>
           </li>
         );
       })}
@@ -65,11 +70,11 @@ const stages = [
     margin: 0 auto;
     padding: calc(120px * var(--space-scale)) var(--gutter);
   }
-  /* Room around the row so the pulsing dot, hover lift and card shadow are not
+  /* Room around the row so the pulsing dot, ribbon, hover lift and shadows are not
      clipped by the scroller (overflow-x also clips vertically). */
   .timeline-scroller {
     --pad: 16px;
-    margin: calc(72px * var(--space-scale) - var(--pad)) 0 calc(-1 * var(--pad) - 32px) calc(-1 * var(--pad));
+    margin: calc(64px * var(--space-scale) - var(--pad)) 0 calc(-1 * var(--pad) - 32px) calc(-1 * var(--pad));
     padding: var(--pad) 0 calc(var(--pad) + 32px) var(--pad);
     overflow-x: auto;
     overscroll-behavior-x: contain;
@@ -79,50 +84,82 @@ const stages = [
     scrollbar-color: var(--paper-line) transparent;
   }
   .timeline-scroller:focus-visible { outline-offset: -3px; }
-  .timeline {
+
+  /* ---------- Desktop: zigzag on a 9-column grid, rail in the middle row ---------- */
+  .chapter-list {
+    --gap: 20px;
+    --rail-h: 64px;
+    /* centre of chapter 1 (spans 3 of 9 columns) = where the solid part of the rail ends */
+    --now: calc((100% - 8 * var(--gap)) / 9 * 1.5 + var(--gap));
     margin: 0;
     padding: 0;
     list-style: none;
     display: grid;
-    grid-auto-flow: column;
-    grid-template-columns: repeat(4, minmax(260px, 1fr));
-    gap: 0;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    grid-template-rows: auto var(--rail-h) auto;
+    column-gap: var(--gap);
   }
-  .stage { min-width: 0; position: relative; padding: 44px 28px 0 0; scroll-snap-align: start; }
-  .stage:last-child { padding-right: 0; }
-
-  /* When the row does not fit, bleed to the right screen edge (no gutter on the right).
-     .inner content = 90% of the section, so one gutter (5%) = 100% / 18 of it. */
-  @media (max-width: 1180px) {
-    .timeline-scroller { margin-right: calc(-100% / 18); }
-    .stage:last-child { padding-right: 5vw; }
-  }
-  .track {
-    position: absolute;
-    top: 10px;
-    left: 0;
-    right: 0;
+  .chapter-list::before {
+    content: '';
+    grid-row: 2;
+    grid-column: 1 / -1;
+    align-self: center;
     height: 4px;
     border-radius: 2px;
+    background:
+      linear-gradient(to right, var(--amber) 0 var(--now), transparent var(--now)),
+      repeating-linear-gradient(to right, var(--track-2) 0 10px, transparent 10px 18px);
   }
+  .chapter { min-width: 0; display: flex; flex-direction: column; }
+  .chapter.up { grid-row: 1 / 3; }
+  .chapter.down { grid-row: 2 / 4; flex-direction: column-reverse; }
+  .chapter-1 { grid-column: 1 / span 3; }
+  .chapter-2 { grid-column: 3 / span 3; }
+  .chapter-3 { grid-column: 5 / span 3; }
+  .chapter-4 { grid-column: 7 / span 3; }
+  /* up:   label, card, stem, dot   |   down (reversed): dot, stem, card, label */
+  .stem { flex: 1 0 14px; width: 2px; margin: 0 auto; background: var(--paper-line); }
+  .dot-zone { flex: 0 0 calc(var(--rail-h) / 2); position: relative; }
+  .up .dot-zone { align-self: center; }
+  .down .dot-zone { align-self: center; }
   .dot {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 24px;
-    height: 24px;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    margin-left: -11px;
     border-radius: 50%;
     background: var(--paper);
-    border: 4px solid var(--green-900);
+    border: 4px solid var(--track-2);
   }
-  .dot-current { background: var(--amber); }
-  .dot-later-1 { border-color: var(--track-2); }
-  .dot-later-2 { border-color: var(--track-3); }
+  /* the dot-zone edge that touches the rail centre: top edge for chapters above, bottom edge below */
+  .up .dot { top: -11px; }
+  .down .dot { bottom: -11px; }
+  .current .dot { background: var(--amber); border-color: var(--green-900); }
+  .chapter.current .stem { background: var(--amber); }
+
+  .chapter-label { display: flex; align-items: baseline; gap: 8px; margin: 0 4px 10px; color: var(--red); }
+  .down .chapter-label { margin: 10px 4px 0; }
+  .chapter-word { font-size: max(12px, calc(13px * var(--type-scale))); font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+  .chapter-num { font-size: calc(34px * var(--type-scale)); line-height: 1; font-style: italic; font-weight: 600; }
+
   .stage-card {
+    position: relative;
     padding: 22px;
     border-radius: var(--radius-card-sm);
     background: var(--paper-card);
     border: 1.5px solid var(--paper-line);
+  }
+  .current .stage-card { border-color: var(--green-900); box-shadow: 0 14px 30px rgba(10, 37, 35, 0.12); }
+  .current .stage-top { padding-right: 34px; } /* room for the ribbon */
+  .ribbon {
+    position: absolute;
+    top: -5px;
+    right: 18px;
+    width: 18px;
+    height: 46px;
+    background: var(--red);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
   }
   .stage-top {
     display: flex;
@@ -139,4 +176,33 @@ const stages = [
   .stage-card h3 { margin: 12px 0 0; font-size: calc(24px * var(--type-scale)); line-height: 1.25; font-weight: 800; }
   .stage-card p { margin: 10px 0 0; font-size: calc(16px * var(--type-scale)); line-height: 1.55; color: var(--text-on-paper-muted); }
   .stage-card ul { margin: 12px 0 0; padding: 0 0 0 18px; font-size: calc(16px * var(--type-scale)); line-height: 1.6; color: var(--text-on-paper-muted); }
+
+  /* ---------- Narrow: one swipeable row, rail on top, every chapter hangs below ---------- */
+  @media (max-width: 1180px) {
+    /* bleed to the right screen edge: one gutter (5%) = 100% / 18 of .inner's content box */
+    .timeline-scroller { margin-right: calc(-100% / 18); }
+    .chapter-list {
+      --col: 270px;
+      --now: 30px; /* first dot sits 30px into chapter 1 */
+      grid-template-columns: repeat(4, var(--col));
+      grid-template-rows: var(--rail-h) auto;
+      column-gap: 24px;
+      padding-right: 5vw;
+      width: max-content;
+    }
+    .chapter-list::before { grid-row: 1; }
+    .chapter.up, .chapter.down { grid-row: 1 / 3; flex-direction: column; scroll-snap-align: start; }
+    .chapter-1, .chapter-2, .chapter-3, .chapter-4 { grid-column: auto; }
+    .chapter-1 { grid-column: 1; } .chapter-2 { grid-column: 2; } .chapter-3 { grid-column: 3; } .chapter-4 { grid-column: 4; }
+    .stem { flex: 0 0 14px; margin: 0 0 0 29px; }
+    .dot-zone { flex: 0 0 calc(var(--rail-h) / 2); }
+    .up .dot-zone, .down .dot-zone { align-self: stretch; }
+    .up .dot, .down .dot { top: auto; bottom: -11px; left: 30px; }
+    .chapter.up .chapter-label, .chapter.down .chapter-label { margin: 0 4px 10px; }
+    /* visual order on narrow screens: dot, stem, label, card */
+    .chapter .dot-zone { order: 0; }
+    .chapter .stem { order: 1; }
+    .chapter .chapter-label { order: 2; }
+    .chapter .stage-card { order: 3; }
+  }
 </style>
