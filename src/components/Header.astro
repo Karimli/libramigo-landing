@@ -28,8 +28,9 @@ const t = useTranslations(lang);
   <div class="menu" id="site-menu">
     <a href="#how" class="nav-link" data-i18n="nav.how">{t('nav.how')}</a>
     <a href="#roadmap" class="nav-link" data-i18n="nav.roadmap">{t('nav.roadmap')}</a>
-    <LangSwitch lang={lang} />
   </div>
+
+  <LangSwitch lang={lang} />
 </header>
 
 <script>
@@ -59,16 +60,17 @@ const t = useTranslations(lang);
 <style>
   .site-header {
     position: relative;
+    z-index: 40; /* menu and language list open over the page */
     max-width: var(--content-max);
     margin: 0 auto;
     padding: 28px var(--gutter);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+    gap: 8px;
   }
   .logo {
+    margin-right: auto;
     font-size: calc(30px * var(--type-scale));
     font-style: italic;
     font-weight: 700;
@@ -96,12 +98,14 @@ const t = useTranslations(lang);
 
   @media (max-width: 760px) {
     .site-header { padding-top: 20px; padding-bottom: 20px; }
+    .menu-toggle { order: 3; }
+    .menu { order: 4; }
     /* Without JS: links stacked under the logo, always visible. */
-    .menu { width: 100%; flex-direction: column; align-items: stretch; gap: 4px; }
-    .nav-link { padding: 12px 0; font-size: calc(19px * var(--type-scale)); border-bottom: 1px solid rgba(244, 237, 225, 0.12); }
-    .menu :global(.lang-switch) { align-self: flex-start; margin: 12px 0 0; }
+    .menu { width: 100%; flex-direction: column; align-items: stretch; gap: 0; }
+    .nav-link { padding: 14px 0; font-size: calc(19px * var(--type-scale)); border-bottom: 1px solid rgba(244, 237, 225, 0.12); }
+    .nav-link:last-child { border-bottom: 0; }
 
-    /* With JS: collapsed behind the toggle. */
+    /* With JS: ☰ toggle (no border) and a panel that slides over the content. */
     :global(.js) .menu-toggle {
       display: inline-flex;
       align-items: center;
@@ -109,14 +113,32 @@ const t = useTranslations(lang);
       width: 48px;
       height: 48px;
       padding: 0;
-      border: 1px solid rgba(244, 237, 225, 0.25);
+      border: 0;
       border-radius: var(--radius-btn);
       background: transparent;
       color: var(--paper);
       cursor: pointer;
     }
-    :global(.js) .menu { display: none; padding: 4px 0 8px; }
-    :global(.js) .menu-open .menu { display: flex; }
+    :global(.js) .menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      padding: 4px var(--gutter) 12px;
+      background: var(--green-800);
+      border-top: 1px solid rgba(244, 237, 225, 0.12);
+      box-shadow: 0 18px 32px rgba(5, 25, 23, 0.45);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 220ms ease, transform 260ms var(--ease-out), visibility 0s linear 260ms;
+    }
+    :global(.js) .menu-open .menu {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition: opacity 220ms ease, transform 260ms var(--ease-out), visibility 0s;
+    }
     .menu-toggle .cross { display: none; }
     .menu-open .menu-toggle .bars { display: none; }
     .menu-open .menu-toggle .cross { display: inline; }

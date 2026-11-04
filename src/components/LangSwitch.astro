@@ -4,20 +4,54 @@ import { languages, useTranslations, type Lang } from '../i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+const current = languages.find((l) => l.code === lang)!;
 ---
-<nav class="lang-switch" aria-label={t('nav.langLabel')} data-i18n-attr="aria-label:nav.langLabel">
-  {languages.map((l) => (
-    <a
-      href={`/${l.code}`}
-      hreflang={l.code}
-      lang={l.code}
-      data-lang-link={l.code}
-      aria-current={l.code === lang ? 'true' : undefined}
-    >{l.label}</a>
-  ))}
-</nav>
+<!-- Desktop: pill with all languages. Phones (with JS): only the active language is shown;
+     hover/tap opens the list. Without JS the pill is always shown. -->
+<div class="lang" data-lang-menu>
+  <button
+    type="button"
+    class="lang-current"
+    aria-expanded="false"
+    aria-controls="lang-list"
+    data-lang-toggle
+  >
+    <span class="visually-hidden" data-i18n="nav.langLabel">{t('nav.langLabel')}</span>{' '}
+    <span data-lang-current>{current.label}</span>
+    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+  </button>
+  <nav class="lang-switch" id="lang-list" aria-label={t('nav.langLabel')} data-i18n-attr="aria-label:nav.langLabel">
+    {languages.map((l) => (
+      <a
+        href={`/${l.code}`}
+        hreflang={l.code}
+        lang={l.code}
+        data-lang-link={l.code}
+        aria-current={l.code === lang ? 'true' : undefined}
+      >{l.label}</a>
+    ))}
+  </nav>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-lang-menu]');
+  const toggle = root?.querySelector<HTMLButtonElement>('[data-lang-toggle]');
+  if (root && toggle) {
+    const setOpen = (open: boolean) => {
+      root.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    };
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    root.querySelectorAll('a[data-lang-link]').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('click', (e) => { if (!root.contains(e.target as Node)) setOpen(false); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && root.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
+    });
+  }
+</script>
 
 <style>
+  .lang { position: relative; }
   .lang-switch {
     display: flex;
     gap: 2px;
@@ -40,5 +74,62 @@ const t = useTranslations(lang);
     background: var(--paper);
     color: var(--green-900);
     font-weight: 700;
+  }
+  .lang-current { display: none; }
+
+  @media (max-width: 760px) {
+    /* Compact trigger: the active language, always visible. */
+    :global(.js) .lang-current {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 48px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--green-900);
+      font-family: inherit;
+      font-size: calc(15px * var(--type-scale));
+      font-weight: 700;
+      cursor: pointer;
+    }
+    :global(.js) .lang-current svg { transition: transform 200ms var(--ease-out); }
+    :global(.js) .is-open .lang-current svg { transform: rotate(180deg); }
+
+    /* Dropdown list over the content. */
+    :global(.js) .lang-switch {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      z-index: 50;
+      flex-direction: column;
+      min-width: 100%;
+      margin: 0;
+      padding: 6px;
+      border-radius: 14px;
+      background: var(--green-800);
+      box-shadow: 0 16px 32px rgba(5, 25, 23, 0.45);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity 180ms ease, transform 180ms var(--ease-out), visibility 0s linear 180ms;
+    }
+    :global(.js) .lang-switch a { text-align: center; }
+    :global(.js) .is-open .lang-switch {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition: opacity 180ms ease, transform 180ms var(--ease-out), visibility 0s;
+    }
+  }
+  /* Hover opens the list on devices that can hover. */
+  @media (max-width: 760px) and (hover: hover) {
+    :global(.js) .lang:hover .lang-switch {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition: opacity 180ms ease, transform 180ms var(--ease-out), visibility 0s;
+    }
   }
 </style>

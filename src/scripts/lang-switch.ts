@@ -57,6 +57,8 @@ function render(lang: string, dict: Dict) {
     if (a.dataset.langLink === lang) a.setAttribute('aria-current', 'true');
     else a.removeAttribute('aria-current');
   });
+  const label = languages.find((l) => l.code === lang)?.label ?? lang.toUpperCase();
+  document.querySelectorAll<HTMLElement>('[data-lang-current]').forEach((el) => (el.textContent = label));
   // canonical / og:url: swap the trailing language segment
   document.querySelectorAll<HTMLElement>('[data-lang-url]').forEach((el) => {
     const attr = el.hasAttribute('href') ? 'href' : 'content';
