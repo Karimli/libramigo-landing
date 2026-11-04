@@ -52,3 +52,8 @@
   /* Motion */
   --ease-out: cubic-bezier(.2, .8, .2, 1);
 }
+
+/* Phones: tighter vertical rhythm between sections (owner request). */
+@media (max-width: 760px) {
+  :root { --space-scale: 0.6; }
+}

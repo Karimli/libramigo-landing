@@ -93,7 +93,16 @@ const endpoint = config.waitlistEndpoint;
     font-size: max(16px, calc(19px * var(--type-scale))); /* iOS zooms below 16px */
   }
   input::placeholder { color: var(--placeholder-on-paper); opacity: 1; }
-  .submit { height: 58px; padding: 0 28px; font-size: calc(19px * var(--type-scale)); }
+  .submit { height: 58px; padding: 0 28px; font-size: calc(19px * var(--type-scale)); white-space: nowrap; }
+  /* Phones: input and button stay on one line. */
+  @media (max-width: 760px) {
+    .row { flex-wrap: nowrap; gap: 8px; }
+    input[type='text'] { flex: 1 1 auto; padding: 0 14px; }
+    .submit { flex: 0 0 auto; padding: 0 16px; }
+  }
+  @media (max-width: 420px) {
+    .submit { padding: 0 12px; font-size: max(14px, calc(17px * var(--type-scale))); }
+  }
   .submit[aria-busy='true'] { cursor: progress; opacity: 0.8; }
   .error { margin: 12px 0 0; font-size: calc(17px * var(--type-scale)); color: var(--error-on-dark); }
   .privacy { margin: 18px 0 0; font-size: calc(15px * var(--type-scale)); line-height: 1.5; color: var(--text-on-dark-muted); }

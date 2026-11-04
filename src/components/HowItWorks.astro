@@ -64,7 +64,7 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
         <div class="mini mini-review" aria-hidden="true">
           <div class="review-head">
             <span class="avatar"></span>
-            <div class="bar dark" style="width: 90px"></div>
+            <div class="bar dark review-name"></div>
             <svg class="stars" width="104" height="18" viewBox="0 0 104 18">
               {stars.map((s) => (
                 <polygon class="star" style={`animation-delay: ${s.delay}ms`} points={s.points} fill={s.filled ? '#E9A83A' : '#D9C9A8'}></polygon>
@@ -228,6 +228,7 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
     display: inline-block;
     flex: 0 0 auto;
   }
+  .review-name { flex: 0 1 90px; min-width: 20px; } /* shrinks on very narrow cards */
   .stars { margin-left: auto; flex: 0 0 auto; }
   .review-quote {
     margin: 2px 0 0;
@@ -280,5 +281,11 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
     background: var(--amber);
     font-size: max(12px, calc(14px * var(--type-scale)));
     font-weight: 800;
+  }
+  /* Very narrow phones (≈320px), last so it overrides the base rules: slimmer card padding and book cover so the shop panel fits. */
+  @media (max-width: 400px) {
+    .step { padding: 22px; }
+    .cover { flex-basis: 64px; }
+    .mini-shop { gap: 12px; }
   }
 </style>
