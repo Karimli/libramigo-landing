@@ -12,7 +12,6 @@
     "title": "A shared shelf for Azerbaijan’s readers",
     "subtitle": "Log the books you read, share reviews and quotes, pick your next book from readers’ recommendations, and order it right here.",
     "cta": "Join the waitlist",
-    "quoteAuthor": "@oxucu shared a quote",
     "quote": "“A good book stays with you after the last page.”",
     "genres": {
       "novel": "Novel",
@@ -31,7 +30,6 @@
     "text": "Azerbaijan has no local platform where readers come together. Recommendations are scattered, reviews sit in different languages and places, and buying books outside Baku is still hard.",
     "quotes": {
       "label": "Quotes",
-      "pause": "Pause quotes",
       "q1": {
         "text": "“Both worlds fit within me, yet I do not fit into this world.”",
         "source": "Imadaddin Nasimi"
