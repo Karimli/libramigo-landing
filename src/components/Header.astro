@@ -6,18 +6,59 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
-<header class="site-header">
+<header class="site-header" data-menu>
   <a href="#top" class="logo serif">{t('brand.name')}</a>
-  <div class="actions">
+
+  <!-- Mobile only, and only with JS (see .js class in BaseLayout). Without JS the menu is always shown. -->
+  <button
+    type="button"
+    class="menu-toggle"
+    aria-expanded="false"
+    aria-controls="site-menu"
+    aria-label={t('nav.menu')}
+    data-i18n-attr="aria-label:nav.menu"
+    data-menu-toggle
+  >
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+      <path class="bars" d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <path class="cross" d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+  </button>
+
+  <div class="menu" id="site-menu">
     <a href="#how" class="nav-link" data-i18n="nav.how">{t('nav.how')}</a>
     <a href="#roadmap" class="nav-link" data-i18n="nav.roadmap">{t('nav.roadmap')}</a>
     <LangSwitch lang={lang} />
-    <a href="#waitlist" class="btn btn-sm" data-i18n="nav.cta">{t('nav.cta')}</a>
   </div>
 </header>
 
+<script>
+  const header = document.querySelector<HTMLElement>('[data-menu]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  if (header && toggle) {
+    const setOpen = (open: boolean) => {
+      header.classList.toggle('menu-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    };
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    // Anchor links close the menu; language links keep it open so the switch is visible.
+    header.querySelectorAll('.nav-link').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && header.classList.contains('menu-open')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (!header.contains(e.target as Node)) setOpen(false);
+    });
+    matchMedia('(min-width: 761px)').addEventListener('change', () => setOpen(false));
+  }
+</script>
+
 <style>
   .site-header {
+    position: relative;
     max-width: var(--content-max);
     margin: 0 auto;
     padding: 28px var(--gutter);
@@ -35,7 +76,7 @@ const t = useTranslations(lang);
     text-decoration: none;
     color: var(--paper);
   }
-  .actions {
+  .menu {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -50,4 +91,34 @@ const t = useTranslations(lang);
   /* Reference keeps link colours fixed on hover (inline colour wins over a:hover). */
   .logo:hover { color: var(--paper); }
   .nav-link:hover { color: var(--text-on-dark-muted); }
+
+  .menu-toggle { display: none; }
+
+  @media (max-width: 760px) {
+    .site-header { padding-top: 20px; padding-bottom: 20px; }
+    /* Without JS: links stacked under the logo, always visible. */
+    .menu { width: 100%; flex-direction: column; align-items: stretch; gap: 4px; }
+    .nav-link { padding: 12px 0; font-size: calc(19px * var(--type-scale)); border-bottom: 1px solid rgba(244, 237, 225, 0.12); }
+    .menu :global(.lang-switch) { align-self: flex-start; margin: 12px 0 0; }
+
+    /* With JS: collapsed behind the toggle. */
+    :global(.js) .menu-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border: 1px solid rgba(244, 237, 225, 0.25);
+      border-radius: var(--radius-btn);
+      background: transparent;
+      color: var(--paper);
+      cursor: pointer;
+    }
+    :global(.js) .menu { display: none; padding: 4px 0 8px; }
+    :global(.js) .menu-open .menu { display: flex; }
+    .menu-toggle .cross { display: none; }
+    .menu-open .menu-toggle .bars { display: none; }
+    .menu-open .menu-toggle .cross { display: inline; }
+  }
 </style>

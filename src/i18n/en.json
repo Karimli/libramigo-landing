@@ -6,7 +6,7 @@
     "how": "How it works",
     "roadmap": "Roadmap",
     "langLabel": "Language",
-    "cta": "Join the waitlist"
+    "menu": "Menu"
   },
   "hero": {
     "title": "A shared shelf for Azerbaijan’s readers",
@@ -28,7 +28,35 @@
   },
   "problem": {
     "title": "Who do you talk to about the book you just read?",
-    "text": "Azerbaijan has no local platform where readers come together. Recommendations are scattered, reviews sit in different languages and places, and buying books outside Baku is still hard."
+    "text": "Azerbaijan has no local platform where readers come together. Recommendations are scattered, reviews sit in different languages and places, and buying books outside Baku is still hard.",
+    "quotes": {
+      "label": "Quotes",
+      "pause": "Pause quotes",
+      "q1": {
+        "text": "“Both worlds fit within me, yet I do not fit into this world.”",
+        "source": "Imadaddin Nasimi"
+      },
+      "q2": {
+        "text": "“The reading of all good books is like a conversation with the finest minds of past centuries.”",
+        "source": "René Descartes, Discourse on the Method"
+      },
+      "q3": {
+        "text": "“All happy families are alike; each unhappy family is unhappy in its own way.”",
+        "source": "Leo Tolstoy, Anna Karenina"
+      },
+      "q4": {
+        "text": "“One sees clearly only with the heart. What is essential is invisible to the eye.”",
+        "source": "Antoine de Saint-Exupéry, The Little Prince"
+      },
+      "q5": {
+        "text": "“Beauty will save the world.”",
+        "source": "Fyodor Dostoevsky, The Idiot"
+      },
+      "q6": {
+        "text": "“I have always imagined that Paradise will be a kind of library.”",
+        "source": "Jorge Luis Borges"
+      }
+    }
   },
   "how": {
     "eyebrow": "Three steps",

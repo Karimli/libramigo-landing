@@ -17,6 +17,16 @@ const stages = [
     <p class="eyebrow" data-i18n="roadmap.eyebrow">{t('roadmap.eyebrow')}</p>
     <h2 class="section-title" data-i18n="roadmap.title">{t('roadmap.title')}</h2>
     <p class="section-lead" data-i18n="roadmap.subtitle">{t('roadmap.subtitle')}</p>
+    <!-- Four stages always in one row; on narrow screens the row scrolls sideways and
+         bleeds to the right edge so the cut-off card shows there is more. -->
+    <div class="timeline-wrap">
+    <div
+      class="timeline-scroller"
+      tabindex="0"
+      role="region"
+      aria-label={t('roadmap.title')}
+      data-i18n-attr="aria-label:roadmap.title"
+    >
     <ol class="timeline">
       {stages.map((s) => {
         const k = `roadmap.stage${s.n}`;
@@ -44,6 +54,8 @@ const stages = [
         );
       })}
     </ol>
+    </div>
+    </div>
   </div>
 </section>
 
@@ -53,16 +65,38 @@ const stages = [
     margin: 0 auto;
     padding: calc(120px * var(--space-scale)) var(--gutter);
   }
+  /* Room around the row so the pulsing dot, hover lift and card shadow are not
+     clipped by the scroller (overflow-x also clips vertically). */
+  .timeline-scroller {
+    --pad: 16px;
+    margin: calc(72px * var(--space-scale) - var(--pad)) 0 calc(-1 * var(--pad) - 32px) calc(-1 * var(--pad));
+    padding: var(--pad) 0 calc(var(--pad) + 32px) var(--pad);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-left: var(--pad);
+    scrollbar-width: thin;
+    scrollbar-color: var(--paper-line) transparent;
+  }
+  .timeline-scroller:focus-visible { outline-offset: -3px; }
   .timeline {
-    margin: calc(72px * var(--space-scale)) 0 0;
+    margin: 0;
     padding: 0;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
-    gap: 44px 0;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(4, minmax(260px, 1fr));
+    gap: 0;
   }
-  .stage { min-width: 0; position: relative; padding: 44px 28px 0 0; }
+  .stage { min-width: 0; position: relative; padding: 44px 28px 0 0; scroll-snap-align: start; }
   .stage:last-child { padding-right: 0; }
+
+  /* When the row does not fit, bleed to the right screen edge (no gutter on the right).
+     .inner content = 90% of the section, so one gutter (5%) = 100% / 18 of it. */
+  @media (max-width: 1180px) {
+    .timeline-scroller { margin-right: calc(-100% / 18); }
+    .stage:last-child { padding-right: 5vw; }
+  }
   .track {
     position: absolute;
     top: 10px;

@@ -6,7 +6,7 @@
     "how": "Necə işləyir",
     "roadmap": "Yol xəritəsi",
     "langLabel": "Dil",
-    "cta": "Siyahıya yazıl"
+    "menu": "Menyu"
   },
   "hero": {
     "title": "Azərbaycan oxucularının ortaq rəfi",
@@ -28,7 +28,35 @@
   },
   "problem": {
     "title": "Oxuduğun kitab haqqında kiminlə danışırsan?",
-    "text": "Azərbaycanda oxucuların bir araya gəldiyi yerli platforma yoxdur. Tövsiyələr dağınıqdır, rəylər müxtəlif dillərdə, müxtəlif yerlərdə qalır. Kitab almaq isə regionlarda hələ də çətindir."
+    "text": "Azərbaycanda oxucuların bir araya gəldiyi yerli platforma yoxdur. Tövsiyələr dağınıqdır, rəylər müxtəlif dillərdə, müxtəlif yerlərdə qalır. Kitab almaq isə regionlarda hələ də çətindir.",
+    "quotes": {
+      "label": "Sitatlar",
+      "pause": "Sitatları dayandır",
+      "q1": {
+        "text": "“Məndə sığar iki cahan, mən bu cahana sığmazam.”",
+        "source": "İmadəddin Nəsimi"
+      },
+      "q2": {
+        "text": "“Yaxşı kitabları oxumaq keçmiş əsrlərin ən layiqli insanları ilə söhbət etmək kimidir.”",
+        "source": "Rene Dekart, «Metod haqqında mühakimə»"
+      },
+      "q3": {
+        "text": "“Bütün xoşbəxt ailələr bir-birinə bənzəyir, hər bədbəxt ailə isə öz tərzində bədbəxtdir.”",
+        "source": "Lev Tolstoy, «Anna Karenina»"
+      },
+      "q4": {
+        "text": "“Yalnız ürək ayıq görür. Ən vacib olanı gözlə görmək olmaz.”",
+        "source": "Antuan de Sent-Ekzüperi, «Balaca şahzadə»"
+      },
+      "q5": {
+        "text": "“Dünyanı gözəllik xilas edəcək.”",
+        "source": "Fyodor Dostoyevski, «İdiot»"
+      },
+      "q6": {
+        "text": "“Mən həmişə cənnəti bir növ kitabxana kimi təsəvvür etmişəm.”",
+        "source": "Xorxe Luis Borxes"
+      }
+    }
   },
   "how": {
     "eyebrow": "Üç addım",

@@ -119,6 +119,18 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
   }
   .how .section-title { max-width: 14em; }
   .steps { margin: calc(64px * var(--space-scale)) 0 0; }
+  /* Three cards side by side (equal panels) or one column – never a 2 + 1 split,
+     where the lone card's panel could not match the others. */
+  @media (min-width: 931px) { .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 930px) {
+    .steps { grid-template-columns: minmax(0, 1fr); }
+    /* Stacked cards cannot share a row, so match the tallest panel (the 3-book shelf,
+       whose height is fixed by its 48px books) with a minimum height. */
+    .mini { min-height: 208px; }
+  }
+  /* Panel content vertically centred when the panel is taller than its content. */
+  .mini-shelf, .mini-review { justify-content: center; }
+  .mini-shop { align-items: center; }
   .steps > li { min-width: 0; }
   .step {
     height: 100%;
@@ -129,6 +141,22 @@ const stars = [0, 1, 2, 3, 4].map((i) => ({ points: star(i * 21), filled: i < 4,
     display: flex;
     flex-direction: column;
     gap: 24px;
+  }
+  /* Equal-height mini UIs: each card spans 3 rows (head, mini UI, text) of the
+     parent grid via subgrid, so the white panels in one row share a height. */
+  @supports (grid-template-rows: subgrid) {
+    .steps > li {
+      display: grid;
+      grid-row: span 3;
+      grid-template-rows: subgrid;
+      row-gap: 0;
+    }
+    .step {
+      display: grid;
+      grid-row: span 3;
+      grid-template-rows: subgrid;
+      row-gap: 24px;
+    }
   }
   .step-head { display: flex; align-items: baseline; gap: 16px; }
   .step-num {

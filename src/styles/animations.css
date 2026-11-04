@@ -16,6 +16,7 @@
   100% { box-shadow: 0 0 0 0 rgba(233, 168, 58, 0); }
 }
 @keyframes lm-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes lm-marquee { to { transform: translateX(-50%); } } /* quote belt (owner request) */
 
 /* Hero */
 .rise { animation: lm-rise 900ms var(--ease-out) both; }
@@ -59,6 +60,10 @@
   .reveal { animation-name: lm-fade; animation-range: entry 0% cover 28%; }
   .track { animation-name: lm-line; animation-range: entry 10% cover 40%; }
   .fill { animation-name: lm-fill; animation-range: entry 20% cover 45%; }
+  /* Roadmap stages sit inside a horizontal scroller, which would capture view().
+     Bind them to a named timeline on a wrapper outside the scroller instead. */
+  .timeline-wrap { view-timeline: --roadmap block; }
+  .timeline-wrap .reveal, .timeline-wrap .track { animation-timeline: --roadmap; }
 }
 
 /* Language switch: text fades out/in (filter is used so it never fights opacity keyframes).

@@ -3,6 +3,7 @@ import { useTranslations, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
 const t = useTranslations(Astro.props.lang);
+const quotes = [1, 2, 3, 4, 5, 6].map((n) => `problem.quotes.q${n}`);
 ---
 <section class="problem paper">
   <div class="bookmark" aria-hidden="true"></div>
@@ -10,12 +11,68 @@ const t = useTranslations(Astro.props.lang);
     <h2 class="serif" data-i18n="problem.title">{t('problem.title')}</h2>
     <p data-i18n="problem.text">{t('problem.text')}</p>
   </div>
+
+  <!-- Quote belt: two identical lists glide left forever (CSS only); the copy is hidden from
+       assistive tech. Pauses on hover/focus and via the toggle; static row with reduced motion. -->
+  <div class="quotes" data-quotes>
+    <div
+      class="belt"
+      role="region"
+      aria-label={t('problem.quotes.label')}
+      data-i18n-attr="aria-label:problem.quotes.label"
+    >
+      <div class="belt-track">
+        {[false, true].map((copy) => (
+          <ul class="quote-list" aria-hidden={copy ? 'true' : undefined}>
+            {quotes.map((k) => (
+              <li>
+                <figure class="quote-card">
+                  <blockquote class="serif" data-i18n={`${k}.text`}>{t(`${k}.text`)}</blockquote>
+                  <figcaption data-i18n={`${k}.source`}>{t(`${k}.source`)}</figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+    <div class="belt-controls">
+      <button
+        type="button"
+        class="belt-toggle"
+        aria-pressed="false"
+        aria-label={t('problem.quotes.pause')}
+        data-i18n-attr="aria-label:problem.quotes.pause"
+        data-quotes-toggle
+        hidden
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+          <path class="icon-pause" d="M6 4v10M12 4v10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+          <path class="icon-play" d="M6 3.5v11l9-5.5z" fill="currentColor" />
+        </svg>
+      </button>
+    </div>
+  </div>
 </section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-quotes]');
+  const toggle = root?.querySelector<HTMLButtonElement>('[data-quotes-toggle]');
+  if (root && toggle) {
+    toggle.hidden = false;
+    toggle.addEventListener('click', () => {
+      const paused = toggle.getAttribute('aria-pressed') !== 'true';
+      toggle.setAttribute('aria-pressed', String(paused));
+      root.classList.toggle('is-paused', paused);
+    });
+  }
+</script>
 
 <style>
   .problem {
     margin-top: calc(96px * var(--space-scale));
     position: relative;
+    padding-bottom: calc(112px * var(--space-scale));
   }
   .bookmark {
     position: absolute;
@@ -29,7 +86,7 @@ const t = useTranslations(Astro.props.lang);
   .inner {
     max-width: var(--content-max);
     margin: 0 auto;
-    padding: calc(120px * var(--space-scale)) var(--gutter) calc(112px * var(--space-scale));
+    padding: calc(120px * var(--space-scale)) var(--gutter) calc(56px * var(--space-scale));
   }
   h2 {
     margin: 0;
@@ -40,11 +97,97 @@ const t = useTranslations(Astro.props.lang);
     font-weight: 600;
     font-style: italic;
   }
-  p {
+  .inner p {
     margin: 32px 0 0;
     max-width: 36em;
     font-size: calc(21px * var(--type-scale));
     line-height: 1.7;
     color: var(--text-on-paper-muted);
+  }
+
+  /* Belt */
+  .belt {
+    overflow: hidden;
+    padding: 8px 0 20px; /* room for card shadow */
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+  .belt-track {
+    display: flex;
+    width: max-content;
+    animation: lm-marquee 80s linear infinite;
+  }
+  .quotes:hover .belt-track,
+  .quotes:focus-within .belt-track,
+  .quotes.is-paused .belt-track { animation-play-state: paused; }
+  .quote-list {
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0 20px 0 0; /* trailing gap so the two copies join seamlessly */
+    list-style: none;
+  }
+  .quote-card {
+    width: 340px;
+    height: 100%;
+    margin: 0;
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    border-radius: var(--radius-card-sm);
+    background: var(--paper-card);
+    border: 1.5px solid var(--paper-line);
+    border-left: 4px solid var(--red);
+    box-shadow: 0 10px 24px rgba(10, 37, 35, 0.08);
+  }
+  blockquote {
+    margin: 0;
+    font-size: calc(20px * var(--type-scale));
+    line-height: 1.45;
+    font-style: italic;
+    color: var(--green-900);
+  }
+  figcaption {
+    font-size: max(12px, calc(15px * var(--type-scale)));
+    font-weight: 700;
+    color: var(--text-on-paper-muted);
+  }
+  .belt-controls {
+    max-width: var(--content-max);
+    margin: 8px auto 0;
+    padding: 0 var(--gutter);
+  }
+  .belt-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1.5px solid var(--paper-line);
+    border-radius: 50%;
+    background: var(--paper-card);
+    color: var(--green-900);
+    cursor: pointer;
+  }
+  .belt-toggle[hidden] { display: none; }
+  .belt-toggle:hover { border-color: var(--green-900); }
+  .belt-toggle .icon-play { display: none; }
+  .belt-toggle[aria-pressed='true'] .icon-play { display: inline; }
+  .belt-toggle[aria-pressed='true'] .icon-pause { display: none; }
+
+  @media (max-width: 600px) {
+    .quote-card { width: 270px; padding: 18px 20px; }
+  }
+
+  .belt:focus-visible { outline-offset: -3px; }
+
+  /* Reduced motion: no gliding; a single static row the user can swipe (and scroll with the keyboard). */
+  @media (prefers-reduced-motion: reduce) {
+    .belt { overflow-x: auto; -webkit-mask-image: none; mask-image: none; padding-left: var(--gutter); padding-right: var(--gutter); }
+    .quote-list[aria-hidden='true'] { display: none; }
+    .belt-controls { display: none; }
   }
 </style>

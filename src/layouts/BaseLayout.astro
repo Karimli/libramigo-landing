@@ -15,6 +15,8 @@ const t = useTranslations(lang);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Marks JS support before first paint (mobile menu collapses only with JS). -->
+    <script is:inline>document.documentElement.classList.add('js')</script>
     <title>{t('meta.title')}</title>
     <meta name="description" content={t('meta.description')} data-i18n-attr="content:meta.description" />
     <SeoHead lang={lang} />
