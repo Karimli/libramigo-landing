@@ -41,8 +41,7 @@
 
 /* Mini interfaces, roadmap, waitlist */
 .fill { animation: lm-fill 1600ms var(--ease-out) 500ms both; }
-/* Roadmap: rail draws left to right, bookmark drops onto the current chapter */
-.chapter-list::before { transform-origin: left center; animation: lm-line 1400ms var(--ease-out) both; }
+/* Roadmap: the rail is static (owner request); the bookmark drops onto the current chapter */
 .ribbon { animation: lm-ribbon 700ms var(--ease-out) 700ms both; }
 .star { transform-origin: center; transform-box: fill-box; animation: lm-pop 520ms var(--ease-out) both; }
 .pulse { animation: lm-pulse 2200ms ease-out infinite; }
@@ -72,14 +71,13 @@
   .timeline-wrap .chapter-3 { animation-range: entry 16% cover 34%; }
   .timeline-wrap .chapter-4 { animation-range: entry 24% cover 40%; }
   /* longhands only – see the note at the top of this block */
-  .chapter-list::before, .ribbon {
+  .ribbon {
     animation-timing-function: linear;
     animation-fill-mode: both;
     animation-duration: auto;
     animation-delay: 0s;
     animation-timeline: --roadmap;
   }
-  .chapter-list::before { animation-range: entry 10% cover 40%; }
   .ribbon { animation-range: entry 30% cover 45%; }
 }
 
