@@ -17,7 +17,6 @@
 }
 @keyframes lm-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 @keyframes lm-marquee { to { transform: translateX(-50%); } } /* quote belt (owner request) */
-@keyframes lm-ribbon { from { opacity: 0; transform: translateY(-28px); } to { opacity: 1; transform: none; } } /* roadmap bookmark */
 
 /* Hero */
 .rise { animation: lm-rise 900ms var(--ease-out) both; }
@@ -41,8 +40,6 @@
 
 /* Mini interfaces, roadmap, waitlist */
 .fill { animation: lm-fill 1600ms var(--ease-out) 500ms both; }
-/* Roadmap: the rail is static (owner request); the bookmark drops onto the current chapter */
-.ribbon { animation: lm-ribbon 700ms var(--ease-out) 700ms both; }
 .star { transform-origin: center; transform-box: fill-box; animation: lm-pop 520ms var(--ease-out) both; }
 .pulse { animation: lm-pulse 2200ms ease-out infinite; }
 .float { animation: lm-float 4s ease-in-out infinite; }
@@ -70,15 +67,6 @@
   .timeline-wrap .chapter-2 { animation-range: entry 8% cover 28%; }
   .timeline-wrap .chapter-3 { animation-range: entry 16% cover 34%; }
   .timeline-wrap .chapter-4 { animation-range: entry 24% cover 40%; }
-  /* longhands only – see the note at the top of this block */
-  .ribbon {
-    animation-timing-function: linear;
-    animation-fill-mode: both;
-    animation-duration: auto;
-    animation-delay: 0s;
-    animation-timeline: --roadmap;
-  }
-  .ribbon { animation-range: entry 30% cover 45%; }
 }
 
 /* Language switch: text fades out/in (filter is used so it never fights opacity keyframes).
