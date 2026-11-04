@@ -113,7 +113,46 @@ window.addEventListener('popstate', () => void switchTo(langFromPath(location.pa
 
 history.replaceState({ lang: current }, '');
 
+// Reserve space: elements marked data-i18n-reserve get the height of their longest
+// translation at the current width, so switching language never shifts the layout.
+async function reserve() {
+  const els = [...document.querySelectorAll<HTMLElement>('[data-i18n-reserve]')];
+  if (!els.length) return;
+  let dicts: Dict[];
+  try {
+    dicts = await Promise.all(codes.map(load));
+  } catch {
+    return;
+  }
+  for (const el of els) {
+    el.style.minHeight = '';
+    const probe = el.cloneNode(false) as HTMLElement;
+    probe.removeAttribute('data-i18n');
+    probe.removeAttribute('data-i18n-reserve');
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;width:${el.clientWidth}px;min-height:0;height:auto;animation:none;transform:none;`;
+    el.after(probe);
+    let max = 0;
+    for (const d of dicts) {
+      probe.textContent = d[el.dataset.i18n!] ?? el.textContent;
+      max = Math.max(max, probe.offsetHeight);
+    }
+    probe.remove();
+    el.style.minHeight = `${max}px`;
+  }
+}
+let raf = 0;
+const scheduleReserve = () => {
+  cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(() => void reserve());
+};
+window.addEventListener('resize', scheduleReserve);
+document.fonts?.ready.then(scheduleReserve);
+
 // Warm the cache so switching is instant.
-const prefetch = () => codes.forEach((c) => void load(c).catch(() => {}));
+const prefetch = () => {
+  codes.forEach((c) => void load(c).catch(() => {}));
+  scheduleReserve();
+};
 if ('requestIdleCallback' in window) requestIdleCallback(prefetch, { timeout: 2000 });
 else setTimeout(prefetch, 1000);

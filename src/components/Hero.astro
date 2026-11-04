@@ -22,8 +22,8 @@ const spines = [
 <section id="top" class="hero">
   <div class="hero-row">
     <div class="hero-text">
-      <h1 class="fade" data-i18n="hero.title">{t('hero.title')}</h1>
-      <p class="fade lead" style="animation-delay: 150ms" data-i18n="hero.subtitle">{t('hero.subtitle')}</p>
+      <h1 class="fade" data-i18n="hero.title" data-i18n-reserve>{t('hero.title')}</h1>
+      <p class="fade lead" style="animation-delay: 150ms" data-i18n="hero.subtitle" data-i18n-reserve>{t('hero.subtitle')}</p>
       <div class="fade cta-row" style="animation-delay: 300ms">
         <a href="#waitlist" class="btn btn-lg" data-i18n="hero.cta">{t('hero.cta')}</a>
       </div>
@@ -38,7 +38,7 @@ const spines = [
             <div class="reader-user">@{heroReader.username}</div>
           </div>
         </div>
-        <p class="serif quote" data-i18n="hero.quote">{t('hero.quote')}</p>
+        <p class="serif quote" data-i18n="hero.quote" data-i18n-reserve>{t('hero.quote')}</p>
       </div>
       <div class="shelf">
         {spines.map((s, i) => (
@@ -72,8 +72,9 @@ const spines = [
     align-items: flex-end;
     gap: 40px;
   }
+  /* Wider text column so the longest (Russian) lead fits on two lines on desktop. */
   .hero-text {
-    flex: 1 1 480px;
+    flex: 1 1 660px;
     min-width: 0;
     padding-bottom: 36px;
   }
@@ -87,7 +88,7 @@ const spines = [
   }
   .lead {
     margin: 28px 0 0;
-    max-width: 34em;
+    max-width: 38em;
     font-size: calc(21px * var(--type-scale));
     line-height: 1.6;
     color: var(--text-on-dark);
@@ -102,7 +103,7 @@ const spines = [
 
   /* Illustration */
   .shelf-art {
-    flex: 1 1 440px;
+    flex: 1 1 380px;
     min-width: 0;
     position: relative;
     height: 400px;
@@ -112,9 +113,9 @@ const spines = [
     top: 0;
     right: 6%;
     z-index: 2;
-    width: 270px;
-    max-width: 100%;
-    padding: 18px 20px 20px;
+    width: 350px; /* two lines for the longest (Russian) quote */
+    max-width: 94%;
+    padding: 16px 18px 18px;
     border-radius: 4px;
     background: var(--paper);
     color: var(--green-900);
@@ -137,7 +138,7 @@ const spines = [
   .reader-user { font-size: max(12px, calc(13px * var(--type-scale))); color: var(--text-on-paper-muted); line-height: 1.3; }
   .quote {
     margin: 14px 0 0;
-    font-size: calc(20px * var(--type-scale));
+    font-size: calc(19px * var(--type-scale));
     line-height: 1.4;
     font-style: italic;
   }
