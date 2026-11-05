@@ -4,20 +4,18 @@ import { useTranslations, type Lang } from '../i18n';
 interface Props { lang: Lang }
 const t = useTranslations(Astro.props.lang);
 
-// Well-known books only (no fake activity). Colour/height shape the spine on the shelf.
+// Watch-only demo: a cursor taps books and they land on the shelf (GSAP, src/scripts/shelf.ts).
+// Server-rendered in its final state, so no-JS and reduced-motion visitors see the full shelf.
 const books = [
-  { id: 'b1', c: 'var(--red)', ink: 'var(--paper)', h: 92 },
-  { id: 'b2', c: 'var(--green-500)', ink: 'var(--paper)', h: 84 },
-  { id: 'b3', c: 'var(--amber)', ink: 'var(--green-900)', h: 72 },
-  { id: 'b4', c: 'var(--green-900)', ink: 'var(--paper)', h: 96 },
-  { id: 'b5', c: 'var(--spine-ochre)', ink: 'var(--green-900)', h: 88 },
-  { id: 'b6', c: 'var(--red-dark)', ink: 'var(--paper)', h: 78 },
-  { id: 'b7', c: 'var(--spine-green)', ink: 'var(--paper)', h: 90 },
-  { id: 'b8', c: 'var(--green-300)', ink: 'var(--green-900)', h: 82 },
-  { id: 'b9', c: 'var(--track-3)', ink: 'var(--green-900)', h: 76 },
-  { id: 'b10', c: 'var(--green-700)', ink: 'var(--paper)', h: 94 },
+  { id: 'b1', c: 'var(--red)', ink: 'var(--paper)', h: 92, end: 'read' },
+  { id: 'b2', c: 'var(--green-500)', ink: 'var(--paper)', h: 84, end: '' },
+  { id: 'b3', c: 'var(--amber)', ink: 'var(--green-900)', h: 72, end: 'read' },
+  { id: 'b4', c: 'var(--green-900)', ink: 'var(--paper)', h: 96, end: 'reading' },
+  { id: 'b5', c: 'var(--spine-ochre)', ink: 'var(--green-900)', h: 88, end: 'read' },
+  { id: 'b6', c: 'var(--spine-green)', ink: 'var(--paper)', h: 90, end: 'want' },
 ];
 const statuses = ['read', 'reading', 'want'] as const;
+const endCount = (s: string) => books.filter((b) => b.end === s).length;
 ---
 <section id="shelf" class="shelf-section paper">
   <div class="inner">
@@ -25,81 +23,68 @@ const statuses = ['read', 'reading', 'want'] as const;
     <h2 class="section-title" data-i18n="shelf.title">{t('shelf.title')}</h2>
     <p class="section-lead" data-i18n="shelf.subtitle">{t('shelf.subtitle')}</p>
 
-    <p class="no-js-note" data-i18n="shelf.noscript">{t('shelf.noscript')}</p>
-
-    <div class="builder" data-shelf>
+    <!-- Decorative animation: hidden from assistive tech, summarised in this paragraph. -->
+    <p class="visually-hidden" data-i18n="shelf.description">{t('shelf.description')}</p>
+    <div class="demo" data-shelf-demo aria-hidden="true">
       <div class="picker">
-        <fieldset class="status-picker">
-          <legend data-i18n="shelf.statusLabel">{t('shelf.statusLabel')}</legend>
-          {statuses.map((s, i) => (
-            <label class:list={['status-opt', `opt-${s}`]}>
-              <input type="radio" name="shelf-status" value={s} checked={i === 0} />
-              <span data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span>
-            </label>
+        <div class="status-picker">
+          {statuses.map((s) => (
+            <span class:list={['status-opt', { on: s === 'want' }]} data-status-opt={s} data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span>
           ))}
-        </fieldset>
+        </div>
 
-        <ul class="books" aria-label={t('shelf.pickerLabel')} data-i18n-attr="aria-label:shelf.pickerLabel">
+        <ul class="books">
           {books.map((b) => (
-            <li>
-              <button type="button" class="book-btn" data-book={b.id} aria-pressed="false" style={`--c: ${b.c}`}>
-                <span class="cover" aria-hidden="true"></span>
-                <span class="book-text">
-                  <span class="book-title" data-i18n={`shelf.books.${b.id}.title`}>{t(`shelf.books.${b.id}.title`)}</span>
-                  <span class="book-author" data-i18n={`shelf.books.${b.id}.author`}>{t(`shelf.books.${b.id}.author`)}</span>
-                </span>
-                {statuses.map((s) => (
-                  <span class:list={['tag', `tag-${s}`]} data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span>
-                ))}
-              </button>
+            <li class="book" data-book={b.id} data-status={b.end || undefined} style={`--c: ${b.c}`}>
+              <span class="cover"></span>
+              <span class="book-text">
+                <span class="book-title" data-i18n={`shelf.books.${b.id}.title`}>{t(`shelf.books.${b.id}.title`)}</span>
+                <span class="book-author" data-i18n={`shelf.books.${b.id}.author`}>{t(`shelf.books.${b.id}.author`)}</span>
+              </span>
+              {statuses.map((s) => (
+                <span class:list={['tag', `tag-${s}`]} data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span>
+              ))}
             </li>
           ))}
         </ul>
-        <p class="hint" data-i18n="shelf.hint">{t('shelf.hint')}</p>
       </div>
 
       <div class="board">
-        <div class="board-head">
-          <h3 data-i18n="shelf.shelfTitle">{t('shelf.shelfTitle')}</h3>
-          <button type="button" class="clear" data-shelf-clear data-i18n="shelf.clear">{t('shelf.clear')}</button>
-        </div>
-
+        <p class="board-title" data-i18n="shelf.shelfTitle">{t('shelf.shelfTitle')}</p>
         <div class="plank">
-          <p class="empty" data-i18n="shelf.empty">{t('shelf.empty')}</p>
           <ul class="spines">
-            {books.map((b) => (
-              <li class="spine-slot" data-spine={b.id} hidden style={`--c: ${b.c}; --ink: ${b.ink}; --h: ${b.h}%`}>
+            {books.filter((b) => b.end).map((b) => (
+              <li class="shelf-spine" data-spine={b.id} data-status={b.end} style={`--c: ${b.c}; --ink: ${b.ink}; --h: ${b.h}%`}>
                 <span class="spine-title" data-i18n={`shelf.books.${b.id}.title`}>{t(`shelf.books.${b.id}.title`)}</span>
-                {statuses.map((s) => (
-                  <span class:list={['visually-hidden', 'sr-status', `sr-${s}`]} data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span>
-                ))}
               </li>
             ))}
           </ul>
         </div>
-
-        <dl class="counts">
+        <div class="counts">
           {statuses.map((s) => (
             <div class:list={['count', `count-${s}`]}>
-              <dt><span class="mark" aria-hidden="true"></span><span data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span></dt>
-              <dd data-count={s}>0</dd>
+              <span class="num" data-count={s}>{endCount(s)}</span>
+              <span class="label"><span class="mark"></span><span data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span></span>
             </div>
           ))}
-        </dl>
-
-        <a href="#waitlist" class="btn btn-sm cta" data-i18n="shelf.cta">{t('shelf.cta')}</a>
-        <p class="note" data-i18n="shelf.note">{t('shelf.note')}</p>
+        </div>
       </div>
-      <p class="visually-hidden" aria-live="polite" data-shelf-live></p>
-      <span hidden data-i18n="shelf.removed" data-shelf-removed>{t('shelf.removed')}</span>
-      <span hidden data-i18n="shelf.cleared" data-shelf-cleared>{t('shelf.cleared')}</span>
+
+      <svg class="cursor" width="30" height="34" viewBox="0 0 30 34">
+        <circle class="ripple" cx="7" cy="5" r="12"></circle>
+        <path d="M5 2 L5 26 L11.5 20.5 L16 31 L20.5 29 L16 18.5 L24.5 18.5 Z" fill="#0A2523" stroke="#F4EDE1" stroke-width="2" stroke-linejoin="round"></path>
+      </svg>
+    </div>
+
+    <div class="cta-row">
+      <a href="#waitlist" class="btn btn-sm" data-i18n="shelf.cta">{t('shelf.cta')}</a>
     </div>
   </div>
 </section>
 
 <script>
-  import { initShelf } from '../scripts/shelf';
-  initShelf();
+  import { initShelfDemo } from '../scripts/shelf';
+  initShelfDemo();
 </script>
 
 <style>
@@ -109,88 +94,63 @@ const statuses = ['read', 'reading', 'want'] as const;
     padding: calc(120px * var(--space-scale)) var(--gutter);
   }
 
-  /* Interactive part needs JS; without it a short note is shown instead. */
-  .no-js-note { margin: 28px 0 0; font-weight: 700; color: var(--text-on-paper-muted); }
-  :global(html.js) .no-js-note { display: none; }
-  :global(html:not(.js)) .builder { display: none; }
-
-  .builder {
+  .demo {
+    position: relative;
     margin: calc(56px * var(--space-scale)) 0 0;
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     gap: 32px;
     align-items: start;
+    pointer-events: none;
+    user-select: none;
   }
-  @media (max-width: 960px) { .builder { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 960px) { .demo { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
 
-  /* ---------- Status segmented control ---------- */
+  /* ---------- Status control ---------- */
   .status-picker {
-    margin: 0;
     padding: 4px;
     border: 1.5px solid var(--paper-line);
     border-radius: 999px;
     display: inline-flex;
-    flex-wrap: wrap;
     gap: 2px;
     background: var(--paper-card);
   }
-  .status-picker legend {
-    float: left;
-    margin: 0;
-    padding: 0 10px 0 12px;
-    align-self: center;
-    line-height: 40px;
-    font-size: max(12px, calc(13px * var(--type-scale)));
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-on-paper-muted);
-  }
-  .status-opt { position: relative; }
-  .status-opt input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
-  .status-opt span {
+  .status-opt {
     display: flex;
     align-items: center;
+    justify-content: center;
     min-height: 40px;
     padding: 0 16px;
     border-radius: 999px;
     font-size: calc(16px * var(--type-scale));
     font-weight: 800;
+    text-align: center;
     color: var(--green-900);
-    transition: background-color 180ms ease, color 180ms ease, filter 180ms ease;
+    transition: background-color 250ms ease, color 250ms ease, filter 180ms ease;
   }
-  .status-opt input:checked + span { background: var(--green-900); color: var(--paper); }
-  .status-opt input:focus-visible + span { outline: 3px solid var(--green-900); outline-offset: 2px; }
+  .status-opt.on { background: var(--green-900); color: var(--paper); }
 
-  /* ---------- Book picker ---------- */
+  /* ---------- Books ---------- */
   .books {
-    margin: 22px 0 0;
+    margin: 18px 0 0;
     padding: 0;
     list-style: none;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
-  @media (max-width: 520px) { .books { grid-template-columns: minmax(0, 1fr); } }
-  .book-btn {
-    width: 100%;
+  .book {
     min-height: 64px;
     padding: 10px 12px;
     display: flex;
     align-items: center;
     gap: 12px;
-    text-align: left;
-    font: inherit;
-    color: var(--green-900);
     background: var(--paper-card);
     border: 1.5px solid var(--paper-line);
     border-radius: 12px;
-    cursor: pointer;
-    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
   }
-  .book-btn:hover { border-color: var(--green-900); }
-  .book-btn:active { transform: scale(0.98); }
-  .book-btn[aria-pressed='true'] { border-color: var(--green-900); box-shadow: inset 0 0 0 1px var(--green-900); }
+  .book[data-status] { border-color: var(--green-900); box-shadow: inset 0 0 0 1px var(--green-900); }
   .cover {
     flex: 0 0 auto;
     width: 26px;
@@ -210,51 +170,30 @@ const statuses = ['read', 'reading', 'want'] as const;
     font-size: max(12px, calc(12px * var(--type-scale)));
     font-weight: 800;
     white-space: nowrap;
+    animation: lm-pop 320ms var(--ease-out) both;
   }
-  .book-btn[data-status='read'] .tag-read { display: inline-block; background: var(--green-900); color: var(--paper); }
-  .book-btn[data-status='reading'] .tag-reading { display: inline-block; background: var(--amber); color: var(--green-900); }
-  .book-btn[data-status='want'] .tag-want { display: inline-block; border: 1.5px dashed var(--green-900); padding: 3px 8px; }
-  .hint { margin: 14px 0 0; font-size: max(13px, calc(15px * var(--type-scale))); color: var(--text-on-paper-muted); }
+  .book[data-status='read'] .tag-read { display: inline-block; background: var(--green-900); color: var(--paper); }
+  .book[data-status='reading'] .tag-reading { display: inline-block; background: var(--amber); color: var(--green-900); }
+  .book[data-status='want'] .tag-want { display: inline-block; border: 1.5px dashed var(--green-900); padding: 3px 8px; }
 
   /* ---------- Shelf board ---------- */
   .board {
-    position: sticky;
-    top: 24px;
     padding: 26px;
     border-radius: var(--radius-card);
     background: var(--paper-card);
     border: 1.5px solid var(--paper-line);
     box-shadow: 0 18px 40px rgba(10, 37, 35, 0.08);
   }
-  @media (max-width: 960px) { .board { position: static; } }
-  .board-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .board h3 { margin: 0; font-family: var(--font-serif); font-style: italic; font-size: calc(26px * var(--type-scale)); font-weight: 600; }
-  .clear {
-    min-height: 40px;
-    padding: 0 12px;
-    font: inherit;
-    font-size: max(13px, calc(15px * var(--type-scale)));
-    font-weight: 700;
-    color: var(--green-900);
-    background: none;
-    border: 0;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    cursor: pointer;
-  }
-  .clear:disabled { opacity: 0.45; cursor: default; text-decoration: none; }
-
+  .board-title { margin: 0; font-family: var(--font-serif); font-style: italic; font-size: calc(26px * var(--type-scale)); font-weight: 600; }
   .plank {
     position: relative;
     margin: 18px 0 0;
-    height: 190px;
+    height: 180px;
     padding: 0 12px;
-    display: flex;
-    align-items: flex-end;
     border-bottom: 12px solid var(--green-900);
     border-radius: 0 0 4px 4px;
   }
-  .plank::after { /* shelf front edge shadow */
+  .plank::after {
     content: '';
     position: absolute;
     left: 0;
@@ -264,50 +203,31 @@ const statuses = ['read', 'reading', 'want'] as const;
     background: rgba(10, 37, 35, 0.12);
     border-radius: 0 0 6px 6px;
   }
-  .empty {
-    position: absolute;
-    inset: 0 0 0 0;
-    margin: 0;
-    padding: 0 18px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: calc(16px * var(--type-scale));
-    color: var(--text-on-paper-muted);
-    border: 1.5px dashed var(--paper-line);
-    border-bottom: 0;
-    border-radius: 12px 12px 0 0;
-  }
-  .builder[data-total='0'] .spines { display: none; }
-  .builder:not([data-total='0']) .empty { display: none; }
   .spines {
-    width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
     list-style: none;
     display: flex;
     align-items: flex-end;
-    gap: 4px;
+    gap: 5px;
   }
-  .spine-slot {
+  .shelf-spine {
     position: relative;
-    flex: 0 1 34px;
-    min-width: 18px;
+    flex: 0 1 38px;
+    min-width: 20px;
     height: var(--h);
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: visible;
     border-radius: 3px 3px 0 0;
     background: var(--c);
     color: var(--ink);
     box-shadow: inset 3px 0 0 rgba(255, 255, 255, 0.12), inset -3px 0 0 rgba(0, 0, 0, 0.14);
-    animation: lm-pop 360ms var(--ease-out) both;
+    transform-origin: bottom center;
   }
-  .spine-slot[hidden] { display: none; }
-  .spine-title {
+  .shelf-spine[hidden] { display: none; }
+  .shelf-spine .spine-title {
     max-height: calc(100% - 22px);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -318,28 +238,23 @@ const statuses = ['read', 'reading', 'want'] as const;
     font-weight: 800;
     letter-spacing: 0.02em;
   }
-  /* reading: amber bookmark ribbon over the top; want: hollow dashed spine */
-  .spine-slot[data-status='reading']::before {
+  .shelf-spine[data-status='reading']::before {
     content: '';
     position: absolute;
     top: -6px;
-    right: 5px;
+    right: 6px;
     width: 8px;
     height: 26px;
     background: var(--amber);
     clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
   }
-  .spine-slot[data-status='want'] {
+  .shelf-spine[data-status='want'] {
     background: transparent;
     color: var(--green-900);
     box-shadow: none;
     outline: 2px dashed var(--c);
     outline-offset: -2px;
   }
-  .spine-slot .sr-status { display: none; }
-  .spine-slot[data-status='read'] .sr-read,
-  .spine-slot[data-status='reading'] .sr-reading,
-  .spine-slot[data-status='want'] .sr-want { display: block; }
 
   .counts {
     margin: 30px 0 0;
@@ -347,35 +262,39 @@ const statuses = ['read', 'reading', 'want'] as const;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
   }
-  .count {
-    padding: 12px;
-    border-radius: 12px;
-    background: var(--paper);
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .count dd { order: -1; } /* number on top, label below; numbers stay aligned when a label wraps */
-  .count dt { display: flex; align-items: center; gap: 6px; font-size: max(12px, calc(14px * var(--type-scale))); font-weight: 700; color: var(--text-on-paper-muted); min-width: 0; }
-  .count dd { margin: 0; font-family: var(--font-serif); font-size: calc(34px * var(--type-scale)); font-weight: 600; line-height: 1.1; }
+  .count { padding: 12px; border-radius: 12px; background: var(--paper); display: flex; flex-direction: column; gap: 2px; }
+  .num { align-self: flex-start; font-family: var(--font-serif); font-size: calc(34px * var(--type-scale)); font-weight: 600; line-height: 1.1; }
+  .label { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: max(12px, calc(14px * var(--type-scale))); font-weight: 700; color: var(--text-on-paper-muted); }
   .mark { flex: 0 0 auto; width: 10px; height: 10px; border-radius: 3px; }
   .count-read .mark { background: var(--green-900); }
   .count-reading .mark { background: var(--amber); }
   .count-want .mark { border: 1.5px dashed var(--green-900); }
 
-  .cta { margin: 22px 0 0; width: 100%; }
-  .note { margin: 12px 0 0; font-size: max(13px, calc(14px * var(--type-scale))); line-height: 1.5; color: var(--text-on-paper-muted); text-align: center; }
-
-  @media (max-width: 520px) {
-    .board { padding: 20px 16px; }
-    .plank { height: 160px; padding: 0 8px; }
-    .spines { gap: 3px; }
-    .count { padding: 10px 8px; }
-    .status-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; border-radius: 16px; }
-    .status-picker legend { float: none; grid-column: 1 / -1; width: 100%; line-height: 1.2; padding: 6px 10px 4px; }
-    .status-opt span { height: 100%; justify-content: center; padding: 6px 8px; border-radius: 12px; text-align: center; line-height: 1.15; }
+  /* Fake cursor: hidden until GSAP shows and moves it. */
+  .cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    visibility: hidden;
+    filter: drop-shadow(0 4px 6px rgba(10, 37, 35, 0.25));
   }
-  @media (prefers-reduced-motion: reduce) {
-    .spine-slot { animation: none; }
+  .ripple { fill: rgba(233, 168, 58, 0.55); opacity: 0; }
+
+  .cta-row { margin: calc(40px * var(--space-scale)) 0 0; display: flex; justify-content: center; }
+
+  /* Phones: compact 2-column book grid so the shelf stays in view while the demo plays. */
+  @media (max-width: 620px) {
+    .status-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; border-radius: 16px; }
+    .status-opt { padding: 6px 8px; border-radius: 12px; line-height: 1.15; }
+    .books { gap: 8px; }
+    .book { min-height: 52px; padding: 8px 10px; gap: 10px; }
+    .cover { width: 18px; height: 28px; }
+    .book-author, .tag { display: none !important; }
+    .book-title { font-size: max(14px, calc(15px * var(--type-scale))); }
+    .board { padding: 18px 16px; }
+    .plank { height: 150px; padding: 0 8px; }
+    .count { padding: 10px 8px; }
+    .cta-row .btn { width: 100%; }
   }
 </style>

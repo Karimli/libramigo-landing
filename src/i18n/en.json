@@ -85,23 +85,15 @@
   "shelf": {
     "eyebrow": "Try it",
     "title": "Build your shelf",
-    "subtitle": "This is how your Libramigo profile will look. Pick a status and tap the books you know.",
-    "noscript": "Turn on JavaScript in your browser to build your shelf.",
-    "statusLabel": "Status",
+    "subtitle": "On Libramigo you mark books with a single tap and your shelf fills itself. Here is how it will look:",
+    "description": "Sample animation: a reader taps books and they land on the shelf in their profile as “Read”, “Reading” or “Want to read”.",
     "status": {
       "read": "Read",
       "reading": "Reading",
       "want": "Want to read"
     },
-    "pickerLabel": "Books",
-    "hint": "Tap again with the same status to take a book off the shelf.",
     "shelfTitle": "My shelf",
-    "clear": "Clear",
-    "empty": "Your shelf is empty. Tap a book and it shows up here.",
     "cta": "Save my shelf on Libramigo",
-    "note": "Your picks stay in this browser only and are never sent anywhere.",
-    "removed": "removed from the shelf",
-    "cleared": "Shelf cleared",
     "books": {
       "b1": {
         "title": "Ali and Nino",
@@ -126,22 +118,6 @@
       "b6": {
         "title": "The Dead",
         "author": "Jalil Mammadguluzadeh"
-      },
-      "b7": {
-        "title": "The Master and Margarita",
-        "author": "Mikhail Bulgakov"
-      },
-      "b8": {
-        "title": "One Hundred Years of Solitude",
-        "author": "Gabriel García Márquez"
-      },
-      "b9": {
-        "title": "1984",
-        "author": "George Orwell"
-      },
-      "b10": {
-        "title": "The Book of Dede Korkut",
-        "author": "Epic"
       }
     }
   },
