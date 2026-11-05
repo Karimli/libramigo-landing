@@ -1,0 +1,381 @@
+---
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const t = useTranslations(Astro.props.lang);
+
+// Well-known books only (no fake activity). Colour/height shape the spine on the shelf.
+const books = [
+  { id: 'b1', c: 'var(--red)', ink: 'var(--paper)', h: 92 },
+  { id: 'b2', c: 'var(--green-500)', ink: 'var(--paper)', h: 84 },
+  { id: 'b3', c: 'var(--amber)', ink: 'var(--green-900)', h: 72 },
+  { id: 'b4', c: 'var(--green-900)', ink: 'var(--paper)', h: 96 },
+  { id: 'b5', c: 'var(--spine-ochre)', ink: 'var(--green-900)', h: 88 },
+  { id: 'b6', c: 'var(--red-dark)', ink: 'var(--paper)', h: 78 },
+  { id: 'b7', c: 'var(--spine-green)', ink: 'var(--paper)', h: 90 },
+  { id: 'b8', c: 'var(--green-300)', ink: 'var(--green-900)', h: 82 },
+  { id: 'b9', c: 'var(--track-3)', ink: 'var(--green-900)', h: 76 },
+  { id: 'b10', c: 'var(--green-700)', ink: 'var(--paper)', h: 94 },
+];
+const statuses = ['read', 'reading', 'want'] as const;
+---
+<section id="shelf" class="shelf-section paper">
+  <div class="inner">
+    <p class="eyebrow" data-i18n="shelf.eyebrow">{t('shelf.eyebrow')}</p>
+    <h2 class="section-title" data-i18n="shelf.title">{t('shelf.title')}</h2>
+    <p class="section-lead" data-i18n="shelf.subtitle">{t('shelf.subtitle')}</p>
+
+    <p class="no-js-note" data-i18n="shelf.noscript">{t('shelf.noscript')}</p>
+
+    <div class="builder" data-shelf>
+      <div class="picker">
+        <fieldset class="status-picker">
+          <legend data-i18n="shelf.statusLabel">{t('shelf.statusLabel')}</legend>
+          {statuses.map((s, i) => (
+            <label class:list={['status-opt', `opt-${s}`]}>
+              <input type="radio" name="shelf-status" value={s} checked={i === 0} />
+              <span data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span>
+            </label>
+          ))}
+        </fieldset>
+
+        <ul class="books" aria-label={t('shelf.pickerLabel')} data-i18n-attr="aria-label:shelf.pickerLabel">
+          {books.map((b) => (
+            <li>
+              <button type="button" class="book-btn" data-book={b.id} aria-pressed="false" style={`--c: ${b.c}`}>
+                <span class="cover" aria-hidden="true"></span>
+                <span class="book-text">
+                  <span class="book-title" data-i18n={`shelf.books.${b.id}.title`}>{t(`shelf.books.${b.id}.title`)}</span>
+                  <span class="book-author" data-i18n={`shelf.books.${b.id}.author`}>{t(`shelf.books.${b.id}.author`)}</span>
+                </span>
+                {statuses.map((s) => (
+                  <span class:list={['tag', `tag-${s}`]} data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span>
+                ))}
+              </button>
+            </li>
+          ))}
+        </ul>
+        <p class="hint" data-i18n="shelf.hint">{t('shelf.hint')}</p>
+      </div>
+
+      <div class="board">
+        <div class="board-head">
+          <h3 data-i18n="shelf.shelfTitle">{t('shelf.shelfTitle')}</h3>
+          <button type="button" class="clear" data-shelf-clear data-i18n="shelf.clear">{t('shelf.clear')}</button>
+        </div>
+
+        <div class="plank">
+          <p class="empty" data-i18n="shelf.empty">{t('shelf.empty')}</p>
+          <ul class="spines">
+            {books.map((b) => (
+              <li class="spine-slot" data-spine={b.id} hidden style={`--c: ${b.c}; --ink: ${b.ink}; --h: ${b.h}%`}>
+                <span class="spine-title" data-i18n={`shelf.books.${b.id}.title`}>{t(`shelf.books.${b.id}.title`)}</span>
+                {statuses.map((s) => (
+                  <span class:list={['visually-hidden', 'sr-status', `sr-${s}`]} data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span>
+                ))}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <dl class="counts">
+          {statuses.map((s) => (
+            <div class:list={['count', `count-${s}`]}>
+              <dt><span class="mark" aria-hidden="true"></span><span data-i18n={`shelf.status.${s}`}>{t(`shelf.status.${s}`)}</span></dt>
+              <dd data-count={s}>0</dd>
+            </div>
+          ))}
+        </dl>
+
+        <a href="#waitlist" class="btn btn-sm cta" data-i18n="shelf.cta">{t('shelf.cta')}</a>
+        <p class="note" data-i18n="shelf.note">{t('shelf.note')}</p>
+      </div>
+      <p class="visually-hidden" aria-live="polite" data-shelf-live></p>
+      <span hidden data-i18n="shelf.removed" data-shelf-removed>{t('shelf.removed')}</span>
+      <span hidden data-i18n="shelf.cleared" data-shelf-cleared>{t('shelf.cleared')}</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initShelf } from '../scripts/shelf';
+  initShelf();
+</script>
+
+<style>
+  .inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: calc(120px * var(--space-scale)) var(--gutter);
+  }
+
+  /* Interactive part needs JS; without it a short note is shown instead. */
+  .no-js-note { margin: 28px 0 0; font-weight: 700; color: var(--text-on-paper-muted); }
+  :global(html.js) .no-js-note { display: none; }
+  :global(html:not(.js)) .builder { display: none; }
+
+  .builder {
+    margin: calc(56px * var(--space-scale)) 0 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 960px) { .builder { grid-template-columns: minmax(0, 1fr); } }
+
+  /* ---------- Status segmented control ---------- */
+  .status-picker {
+    margin: 0;
+    padding: 4px;
+    border: 1.5px solid var(--paper-line);
+    border-radius: 999px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    background: var(--paper-card);
+  }
+  .status-picker legend {
+    float: left;
+    margin: 0;
+    padding: 0 10px 0 12px;
+    align-self: center;
+    line-height: 40px;
+    font-size: max(12px, calc(13px * var(--type-scale)));
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-on-paper-muted);
+  }
+  .status-opt { position: relative; }
+  .status-opt input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+  .status-opt span {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 999px;
+    font-size: calc(16px * var(--type-scale));
+    font-weight: 800;
+    color: var(--green-900);
+    transition: background-color 180ms ease, color 180ms ease, filter 180ms ease;
+  }
+  .status-opt input:checked + span { background: var(--green-900); color: var(--paper); }
+  .status-opt input:focus-visible + span { outline: 3px solid var(--green-900); outline-offset: 2px; }
+
+  /* ---------- Book picker ---------- */
+  .books {
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  @media (max-width: 520px) { .books { grid-template-columns: minmax(0, 1fr); } }
+  .book-btn {
+    width: 100%;
+    min-height: 64px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    font: inherit;
+    color: var(--green-900);
+    background: var(--paper-card);
+    border: 1.5px solid var(--paper-line);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  }
+  .book-btn:hover { border-color: var(--green-900); }
+  .book-btn:active { transform: scale(0.98); }
+  .book-btn[aria-pressed='true'] { border-color: var(--green-900); box-shadow: inset 0 0 0 1px var(--green-900); }
+  .cover {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 38px;
+    border-radius: 3px 5px 5px 3px;
+    background: var(--c);
+    box-shadow: inset 4px 0 0 rgba(0, 0, 0, 0.18);
+  }
+  .book-text { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .book-title { font-size: calc(17px * var(--type-scale)); font-weight: 800; line-height: 1.25; }
+  .book-author { font-size: max(13px, calc(14px * var(--type-scale))); line-height: 1.3; color: var(--text-on-paper-muted); }
+  .tag {
+    display: none;
+    flex: 0 0 auto;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: max(12px, calc(12px * var(--type-scale)));
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  .book-btn[data-status='read'] .tag-read { display: inline-block; background: var(--green-900); color: var(--paper); }
+  .book-btn[data-status='reading'] .tag-reading { display: inline-block; background: var(--amber); color: var(--green-900); }
+  .book-btn[data-status='want'] .tag-want { display: inline-block; border: 1.5px dashed var(--green-900); padding: 3px 8px; }
+  .hint { margin: 14px 0 0; font-size: max(13px, calc(15px * var(--type-scale))); color: var(--text-on-paper-muted); }
+
+  /* ---------- Shelf board ---------- */
+  .board {
+    position: sticky;
+    top: 24px;
+    padding: 26px;
+    border-radius: var(--radius-card);
+    background: var(--paper-card);
+    border: 1.5px solid var(--paper-line);
+    box-shadow: 0 18px 40px rgba(10, 37, 35, 0.08);
+  }
+  @media (max-width: 960px) { .board { position: static; } }
+  .board-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .board h3 { margin: 0; font-family: var(--font-serif); font-style: italic; font-size: calc(26px * var(--type-scale)); font-weight: 600; }
+  .clear {
+    min-height: 40px;
+    padding: 0 12px;
+    font: inherit;
+    font-size: max(13px, calc(15px * var(--type-scale)));
+    font-weight: 700;
+    color: var(--green-900);
+    background: none;
+    border: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .clear:disabled { opacity: 0.45; cursor: default; text-decoration: none; }
+
+  .plank {
+    position: relative;
+    margin: 18px 0 0;
+    height: 190px;
+    padding: 0 12px;
+    display: flex;
+    align-items: flex-end;
+    border-bottom: 12px solid var(--green-900);
+    border-radius: 0 0 4px 4px;
+  }
+  .plank::after { /* shelf front edge shadow */
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -18px;
+    height: 6px;
+    background: rgba(10, 37, 35, 0.12);
+    border-radius: 0 0 6px 6px;
+  }
+  .empty {
+    position: absolute;
+    inset: 0 0 0 0;
+    margin: 0;
+    padding: 0 18px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: calc(16px * var(--type-scale));
+    color: var(--text-on-paper-muted);
+    border: 1.5px dashed var(--paper-line);
+    border-bottom: 0;
+    border-radius: 12px 12px 0 0;
+  }
+  .builder[data-total='0'] .spines { display: none; }
+  .builder:not([data-total='0']) .empty { display: none; }
+  .spines {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .spine-slot {
+    position: relative;
+    flex: 0 1 34px;
+    min-width: 18px;
+    height: var(--h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    border-radius: 3px 3px 0 0;
+    background: var(--c);
+    color: var(--ink);
+    box-shadow: inset 3px 0 0 rgba(255, 255, 255, 0.12), inset -3px 0 0 rgba(0, 0, 0, 0.14);
+    animation: lm-pop 360ms var(--ease-out) both;
+  }
+  .spine-slot[hidden] { display: none; }
+  .spine-title {
+    max-height: calc(100% - 22px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  /* reading: amber bookmark ribbon over the top; want: hollow dashed spine */
+  .spine-slot[data-status='reading']::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 5px;
+    width: 8px;
+    height: 26px;
+    background: var(--amber);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+  }
+  .spine-slot[data-status='want'] {
+    background: transparent;
+    color: var(--green-900);
+    box-shadow: none;
+    outline: 2px dashed var(--c);
+    outline-offset: -2px;
+  }
+  .spine-slot .sr-status { display: none; }
+  .spine-slot[data-status='read'] .sr-read,
+  .spine-slot[data-status='reading'] .sr-reading,
+  .spine-slot[data-status='want'] .sr-want { display: block; }
+
+  .counts {
+    margin: 30px 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .count {
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .count dd { order: -1; } /* number on top, label below; numbers stay aligned when a label wraps */
+  .count dt { display: flex; align-items: center; gap: 6px; font-size: max(12px, calc(14px * var(--type-scale))); font-weight: 700; color: var(--text-on-paper-muted); min-width: 0; }
+  .count dd { margin: 0; font-family: var(--font-serif); font-size: calc(34px * var(--type-scale)); font-weight: 600; line-height: 1.1; }
+  .mark { flex: 0 0 auto; width: 10px; height: 10px; border-radius: 3px; }
+  .count-read .mark { background: var(--green-900); }
+  .count-reading .mark { background: var(--amber); }
+  .count-want .mark { border: 1.5px dashed var(--green-900); }
+
+  .cta { margin: 22px 0 0; width: 100%; }
+  .note { margin: 12px 0 0; font-size: max(13px, calc(14px * var(--type-scale))); line-height: 1.5; color: var(--text-on-paper-muted); text-align: center; }
+
+  @media (max-width: 520px) {
+    .board { padding: 20px 16px; }
+    .plank { height: 160px; padding: 0 8px; }
+    .spines { gap: 3px; }
+    .count { padding: 10px 8px; }
+    .status-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; border-radius: 16px; }
+    .status-picker legend { float: none; grid-column: 1 / -1; width: 100%; line-height: 1.2; padding: 6px 10px 4px; }
+    .status-opt span { height: 100%; justify-content: center; padding: 6px 8px; border-radius: 12px; text-align: center; line-height: 1.15; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spine-slot { animation: none; }
+  }
+</style>

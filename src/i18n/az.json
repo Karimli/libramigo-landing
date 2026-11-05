@@ -82,6 +82,69 @@
       "text": "Bəyəndiyin kitabı elə səhifəsindən sifariş et. Kartla və ya Bakıda nağd ödə, çatdırılma bütün Azərbaycana."
     }
   },
+  "shelf": {
+    "eyebrow": "Sına",
+    "title": "Rəfini indi qur",
+    "subtitle": "Libramigoda profilin belə görünəcək. Statusu seç və tanıdığın kitablara toxun.",
+    "noscript": "Rəfi qurmaq üçün brauzerdə JavaScript-i aktiv et.",
+    "statusLabel": "Status",
+    "status": {
+      "read": "Oxudum",
+      "reading": "Oxuyuram",
+      "want": "Oxuyacağam"
+    },
+    "pickerLabel": "Kitablar",
+    "hint": "Eyni statusla yenidən toxunsan, kitab rəfdən çıxar.",
+    "shelfTitle": "Mənim rəfim",
+    "clear": "Təmizlə",
+    "empty": "Rəfin hələ boşdur. Kitablara toxun, burada görünsün.",
+    "cta": "Rəfimi Libramigoda saxla",
+    "note": "Seçimlərin yalnız bu brauzerdə qalır və heç yerə göndərilmir.",
+    "removed": "rəfdən çıxdı",
+    "cleared": "Rəf təmizləndi",
+    "books": {
+      "b1": {
+        "title": "Əli və Nino",
+        "author": "Qurban Səid"
+      },
+      "b2": {
+        "title": "Leyli və Məcnun",
+        "author": "Məhəmməd Füzuli"
+      },
+      "b3": {
+        "title": "Kiçik şahzadə",
+        "author": "Antuan de Sent-Ekzüperi"
+      },
+      "b4": {
+        "title": "Cinayət və cəza",
+        "author": "Fyodor Dostoyevski"
+      },
+      "b5": {
+        "title": "Anna Karenina",
+        "author": "Lev Tolstoy"
+      },
+      "b6": {
+        "title": "Ölülər",
+        "author": "Cəlil Məmmədquluzadə"
+      },
+      "b7": {
+        "title": "Ustad və Marqarita",
+        "author": "Mixail Bulqakov"
+      },
+      "b8": {
+        "title": "Yüz ilin tənhalığı",
+        "author": "Qabriel Qarsia Markes"
+      },
+      "b9": {
+        "title": "1984",
+        "author": "Corc Oruell"
+      },
+      "b10": {
+        "title": "Kitabi-Dədə Qorqud",
+        "author": "Dastan"
+      }
+    }
+  },
   "whoFor": {
     "eyebrow": "Oxucular üçün",
     "title": "Kimin üçündür",
