@@ -14,20 +14,14 @@ const url = (path: string) => (Astro.site ? new URL(path, Astro.site).href : pat
     {codes.map((c) => <link rel="alternate" hreflang={c} href={url(`/${c}`)} />)}
     <link rel="alternate" hreflang="x-default" href={url(`/${defaultLang}`)} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <!-- Language detection: 1) stored choice, 2) browser languages, 3) default. -->
+    <!-- Language: the visitor's own earlier choice, otherwise Azerbaijani (owner decision:
+         browser language is not used, so an English browser still lands on /az). -->
     <script is:inline define:vars={{ codes, defaultLang, storageKey }}>
       var lang = null;
       try {
         var stored = localStorage.getItem(storageKey);
         if (codes.indexOf(stored) > -1) lang = stored;
       } catch (e) {}
-      if (!lang) {
-        var prefs = navigator.languages || [navigator.language || ''];
-        for (var i = 0; i < prefs.length && !lang; i++) {
-          var base = String(prefs[i]).toLowerCase().split('-')[0];
-          if (codes.indexOf(base) > -1) lang = base;
-        }
-      }
       location.replace('/' + (lang || defaultLang) + location.hash);
     </script>
     <noscript><meta http-equiv="refresh" content={`0; url=/${defaultLang}`} /></noscript>
