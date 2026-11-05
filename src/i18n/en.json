@@ -6,7 +6,8 @@
     "how": "How it works",
     "roadmap": "Roadmap",
     "langLabel": "Language",
-    "menu": "Menu"
+    "menu": "Menu",
+    "community": "Community"
   },
   "hero": {
     "title": "A shared shelf for Azerbaijan’s readers",
@@ -140,6 +141,34 @@
       "item1": "Store and platform in one app",
       "item2": "Your shelf and orders on your phone"
     }
+  },
+  "community": {
+    "eyebrow": "Community",
+    "title": "Let’s gather around books",
+    "subtitle": "Libramigo won’t be just an app, it will be a place where readers meet. We are preparing the first community formats and will shape them together with our first readers.",
+    "status": "In the works",
+    "club": {
+      "title": "Monthly book club",
+      "text": "Each month we pick one book, read it together and talk it over at the end of the month.",
+      "meta": "Monthly · online"
+    },
+    "challenge": {
+      "title": "Reading challenges",
+      "text": "Set seasonal goals, like 5 Azerbaijani authors this summer, and share your progress with friends.",
+      "meta": "Seasonal"
+    },
+    "meetups": {
+      "title": "Live meetups",
+      "text": "Face-to-face meetups with fellow book lovers in cafés and bookshops in Baku and the regions.",
+      "meta": "Baku & regions"
+    },
+    "authors": {
+      "title": "Author talks",
+      "text": "Open conversations with writers and translators: ask your question directly.",
+      "meta": "Online & in person"
+    },
+    "callout": "Which format should we start with? Join the waitlist: the first invitations go to people on it.",
+    "cta": "Join the waitlist"
   },
   "waitlist": {
     "title": "Be one of the first readers",

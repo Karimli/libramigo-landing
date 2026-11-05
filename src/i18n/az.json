@@ -6,7 +6,8 @@
     "how": "Necə işləyir",
     "roadmap": "Yol xəritəsi",
     "langLabel": "Dil",
-    "menu": "Menyu"
+    "menu": "Menyu",
+    "community": "İcma"
   },
   "hero": {
     "title": "Azərbaycan oxucularının ortaq rəfi",
@@ -140,6 +141,34 @@
       "item1": "Mağaza və platforma bir tətbiqdə",
       "item2": "Rəfin və sifarişlərin telefonunda"
     }
+  },
+  "community": {
+    "eyebrow": "İcma",
+    "title": "Kitablar ətrafında bir araya gələk",
+    "subtitle": "Libramigo təkcə tətbiq olmayacaq, oxucuların görüşdüyü yer olacaq. İcmanın ilk formatlarını hazırlayırıq və onları ilk oxucularla birlikdə quracağıq.",
+    "status": "Hazırlanır",
+    "club": {
+      "title": "Aylıq kitab klubu",
+      "text": "Hər ay bir kitab seçirik, birlikdə oxuyuruq və ayın sonunda müzakirə edirik.",
+      "meta": "Hər ay · onlayn"
+    },
+    "challenge": {
+      "title": "Oxu çağırışları",
+      "text": "Mövsümi hədəflər qoy, məsələn yayda 5 Azərbaycan müəllifi, və irəliləyişini dostlarınla bölüş.",
+      "meta": "Mövsümi"
+    },
+    "meetups": {
+      "title": "Canlı görüşlər",
+      "text": "Bakıda və regionlarda kafe və kitab mağazalarında kitabsevərlərlə üz-üzə görüşlər.",
+      "meta": "Bakı və regionlar"
+    },
+    "authors": {
+      "title": "Müəlliflərlə söhbət",
+      "text": "Yazıçı və tərcüməçilərlə açıq söhbətlər: sualını birbaşa onlara ver.",
+      "meta": "Onlayn və canlı"
+    },
+    "callout": "Hansı formatdan başlayaq? Gözləmə siyahısına qoşul, ilk dəvətlər siyahıdakılara gedəcək.",
+    "cta": "Siyahıya qoşul"
   },
   "waitlist": {
     "title": "İlk oxuculardan biri ol",

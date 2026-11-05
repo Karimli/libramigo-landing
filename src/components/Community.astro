@@ -1,0 +1,177 @@
+---
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const t = useTranslations(Astro.props.lang);
+
+// Planned community formats (idea stage: no counts, dates or testimonials — brief rule).
+const formats = [
+  {
+    key: 'club', accent: 'var(--red)',
+    icon: '<rect x="3.5" y="5" width="17" height="15" rx="2.5" fill="none" stroke="#F4EDE1" stroke-width="1.8"></rect><path d="M3.5 9.5h17M8 3v4M16 3v4M9 14.5l2 2 4-4" fill="none" stroke="#F4EDE1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>',
+    meta: '<rect x="2.5" y="3.5" width="11" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"></rect><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>',
+  },
+  {
+    key: 'challenge', accent: 'var(--amber)',
+    icon: '<path d="M6 21V4M6 4.5c4-2 7 2 12 0v8c-5 2-8-2-12 0" fill="none" stroke="#0A2523" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>',
+    meta: '<circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path d="M8 5v3l2 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>',
+  },
+  {
+    key: 'meetups', accent: 'var(--green-300)',
+    icon: '<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z" fill="none" stroke="#0A2523" stroke-width="1.8" stroke-linejoin="round"></path><circle cx="12" cy="10" r="2.4" fill="#B8323F" stroke="#0A2523" stroke-width="1.4"></circle>',
+    meta: '<path d="M8 14s-4.5-4-4.5-7.5a4.5 4.5 0 0 1 9 0C12.5 10 8 14 8 14z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>',
+  },
+  {
+    key: 'authors', accent: 'var(--paper)',
+    icon: '<rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="#0A2523" stroke-width="1.8"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7" fill="none" stroke="#0A2523" stroke-width="1.8" stroke-linecap="round"></path>',
+    meta: '<path d="M2.5 4.5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7l-3 2.5v-2.5h0a2 2 0 0 1-1.5-2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>',
+  },
+];
+---
+<section id="community" class="community">
+  <div class="inner">
+    <p class="eyebrow" data-i18n="community.eyebrow">{t('community.eyebrow')}</p>
+    <h2 class="section-title" data-i18n="community.title">{t('community.title')}</h2>
+    <p class="section-lead" data-i18n="community.subtitle">{t('community.subtitle')}</p>
+
+    <ul class="tickets">
+      {formats.map((f) => (
+        <li class="reveal ticket-wrap">
+          <article class="ticket" style={`--accent: ${f.accent}`}>
+            <div class="ticket-top">
+              <span class="icon" aria-hidden="true">
+                <svg width="30" height="30" viewBox="0 0 24 24" set:html={f.icon} />
+              </span>
+              <span class="pill" data-i18n="community.status">{t('community.status')}</span>
+            </div>
+            <h3 data-i18n={`community.${f.key}.title`}>{t(`community.${f.key}.title`)}</h3>
+            <p data-i18n={`community.${f.key}.text`}>{t(`community.${f.key}.text`)}</p>
+            <div class="ticket-meta">
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" set:html={f.meta} />
+              <span data-i18n={`community.${f.key}.meta`}>{t(`community.${f.key}.meta`)}</span>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ul>
+
+    <div class="callout reveal">
+      <p data-i18n="community.callout">{t('community.callout')}</p>
+      <a href="#waitlist" class="btn btn-sm" data-i18n="community.cta">{t('community.cta')}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .community {
+    --section-bg: var(--green-800);
+    background: var(--section-bg);
+    border-top: 1px solid rgba(244, 237, 225, 0.12);
+  }
+  .inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: calc(120px * var(--space-scale)) var(--gutter);
+  }
+
+  /* 4 → 2 → 1 columns; never a 3 + 1 split. */
+  .tickets {
+    margin: calc(60px * var(--space-scale)) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+  @media (max-width: 1100px) { .tickets { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 620px) { .tickets { grid-template-columns: minmax(0, 1fr); gap: 18px; } }
+  .ticket-wrap { min-width: 0; display: flex; }
+
+  /* Event-ticket card: accent edge on top, perforated stub with side notches at the bottom. */
+  .ticket {
+    --pad: 26px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--pad) var(--pad) 0;
+    border-radius: var(--radius-card);
+    background: var(--green-700);
+    border: 1px solid rgba(244, 237, 225, 0.14);
+    border-top: 6px solid var(--accent);
+  }
+  .ticket-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .icon {
+    width: 56px;
+    height: 56px;
+    flex: 0 0 auto;
+    border-radius: 14px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pill {
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1.5px dashed rgba(244, 237, 225, 0.45);
+    color: var(--text-on-dark);
+    font-size: max(12px, calc(13px * var(--type-scale)));
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .ticket h3 { margin: 22px 0 0; font-size: calc(24px * var(--type-scale)); line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; }
+  .ticket p { margin: 10px 0 22px; font-size: calc(17px * var(--type-scale)); line-height: 1.6; color: var(--text-on-dark); }
+  .ticket-meta {
+    position: relative;
+    margin: auto calc(-1 * var(--pad)) 0;
+    padding: 16px var(--pad) 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 2px dashed rgba(244, 237, 225, 0.22);
+    color: var(--amber);
+    font-size: max(13px, calc(15px * var(--type-scale)));
+    font-weight: 800;
+  }
+  .ticket-meta svg { flex: 0 0 auto; }
+  /* the two notches punched out of the ticket edges, on the perforation line */
+  .ticket-meta::before,
+  .ticket-meta::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--section-bg);
+    border: 1px solid rgba(244, 237, 225, 0.14);
+  }
+  .ticket-meta::before { left: -10px; clip-path: inset(0 0 0 50%); }
+  .ticket-meta::after { right: -10px; clip-path: inset(0 50% 0 0); }
+
+  .callout {
+    margin: calc(48px * var(--space-scale)) 0 0;
+    padding: 24px 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    border-radius: var(--radius-card);
+    border: 1.5px dashed rgba(233, 168, 58, 0.55);
+  }
+  .callout p {
+    margin: 0;
+    flex: 1 1 22em;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: calc(22px * var(--type-scale));
+    line-height: 1.45;
+  }
+  @media (max-width: 620px) {
+    .ticket { --pad: 22px; }
+    .callout { padding: 20px; }
+    .callout .btn { width: 100%; }
+  }
+</style>

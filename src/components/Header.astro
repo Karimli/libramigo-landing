@@ -28,6 +28,7 @@ const t = useTranslations(lang);
   <div class="menu" id="site-menu">
     <a href="#how" class="nav-link" data-i18n="nav.how">{t('nav.how')}</a>
     <a href="#roadmap" class="nav-link" data-i18n="nav.roadmap">{t('nav.roadmap')}</a>
+    <a href="#community" class="nav-link" data-i18n="nav.community">{t('nav.community')}</a>
   </div>
 
   <LangSwitch lang={lang} />
@@ -53,7 +54,7 @@ const t = useTranslations(lang);
     document.addEventListener('click', (e) => {
       if (!header.contains(e.target as Node)) setOpen(false);
     });
-    matchMedia('(min-width: 761px)').addEventListener('change', () => setOpen(false));
+    matchMedia('(min-width: 901px)').addEventListener('change', () => setOpen(false));
   }
 </script>
 
@@ -96,7 +97,7 @@ const t = useTranslations(lang);
 
   .menu-toggle { display: none; }
 
-  @media (max-width: 760px) {
+  @media (max-width: 900px) { /* 3 nav links need ~740px in RU */
     .site-header { padding-top: 20px; padding-bottom: 20px; }
     .menu-toggle { order: 3; }
     .menu { order: 4; }
