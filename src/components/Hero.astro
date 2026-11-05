@@ -104,10 +104,20 @@ const spines = [
 
   /* Illustration */
   .shelf-art {
-    flex: 1 1 380px;
+    flex: 1 1 340px;
     min-width: 0;
     position: relative;
     height: 400px;
+  }
+  /* Desktop: text and shelf always side by side. The hero's side padding grows with the
+     viewport (5%) while max-width is fixed, so the row gets narrower on very wide screens;
+     without nowrap the shelf dropped under the text there and the quote card floated. */
+  @media (min-width: 1000px) {
+    .hero-row { flex-wrap: nowrap; }
+  }
+  /* Stacked: the shelf area is as wide as its books (~480px), so the quote card stays on them. */
+  @media (max-width: 999px) {
+    .shelf-art { flex-basis: 100%; max-width: 480px; }
   }
   .quote-card {
     position: absolute;
