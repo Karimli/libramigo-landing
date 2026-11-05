@@ -1,12 +1,16 @@
 ---
 import { useTranslations, type Lang } from '../i18n';
-import { heroReader } from '../data/readers';
+import { heroReader, quoteReaders } from '../data/readers';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
 // Shelf spines – sizes and colours from reference/AZ.dc.html.
+// Quotes the hero card cycles through (GSAP, src/scripts/hero.ts): the hero quote first,
+// then the short book quotes from the belt below, each with its demo reader.
+const cycle = [1, 4, 5, 6].map((n) => ({ key: `problem.quotes.q${n}`, reader: quoteReaders[n - 1] }));
+
 const spines = [
   { key: 'novel',      w: 46, h: 250, bg: 'var(--red)',         fg: 'var(--paper)',     shade: 0.22 },
   { key: 'poetry',     w: 34, h: 200, bg: 'var(--amber)',       fg: 'var(--green-900)', shade: 0.18 },
@@ -30,15 +34,30 @@ const spines = [
     </div>
 
     <div class="shelf-art" aria-hidden="true">
-      <div class="card quote-card">
-        <div class="quote-meta">
-          <img class="avatar" src={heroReader.avatar} alt="" width="36" height="36" decoding="async" />
-          <div>
-            <div class="reader-name">{heroReader.name}</div>
-            <div class="reader-user">@{heroReader.username}</div>
+      <div class="card quote-card" data-hero-card>
+        <div class="quote-body">
+          <div class="quote-meta">
+            <img class="avatar" src={heroReader.avatar} alt="" width="36" height="36" decoding="async" data-hero-avatar />
+            <div>
+              <div class="reader-name" data-hero-name>{heroReader.name}</div>
+              <div class="reader-user" data-hero-user>@{heroReader.username}</div>
+            </div>
           </div>
+          <p class="serif quote" data-i18n="hero.quote" data-hero-quote>{t('hero.quote')}</p>
+          <p class="quote-source" data-hero-source hidden></p>
         </div>
-        <p class="serif quote" data-i18n="hero.quote" data-i18n-reserve>{t('hero.quote')}</p>
+      </div>
+      <!-- Pool for the quote cycle; kept in the DOM so the language switch translates it. -->
+      <div hidden data-hero-pool>
+        <div data-name={heroReader.name} data-user={heroReader.username} data-avatar={heroReader.avatar}>
+          <span data-i18n="hero.quote" data-role="text">{t('hero.quote')}</span>
+        </div>
+        {cycle.map((c) => (
+          <div data-name={c.reader.name} data-user={c.reader.username} data-avatar={c.reader.avatar}>
+            <span data-i18n={`${c.key}.text`} data-role="text">{t(`${c.key}.text`)}</span>
+            <span data-i18n={`${c.key}.source`} data-role="source">{t(`${c.key}.source`)}</span>
+          </div>
+        ))}
       </div>
       <div class="shelf">
         {spines.map((s, i) => (
@@ -59,6 +78,15 @@ const spines = [
   </div>
   <div class="shelf-board" aria-hidden="true"></div>
 </section>
+
+<script is:inline>
+  // Safety net: if the animation script never runs, show the static hero after 4s.
+  setTimeout(function () { document.documentElement.classList.add('hero-static'); }, 4000);
+</script>
+<script>
+  import { initHeroAnimation } from '../scripts/hero';
+  initHeroAnimation();
+</script>
 
 <style>
   .hero {
@@ -192,6 +220,25 @@ const spines = [
     letter-spacing: 0.04em;
     white-space: nowrap;
   }
+  .quote-source {
+    margin: 8px 0 0;
+    font-size: max(12px, calc(14px * var(--type-scale)));
+    font-weight: 700;
+    color: var(--text-on-paper-muted);
+  }
+  .quote-source::before { content: '— '; }
+
+  /* With JS and motion allowed, GSAP runs the entrance (src/scripts/hero.ts): turn off the
+     CSS entrance and keep the pieces hidden until the timeline reveals them. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js:not(.hero-static)) .slot,
+    :global(html.js:not(.hero-static)) .quote-card,
+    :global(html.js:not(.hero-static)) .shelf-board { visibility: hidden; }
+    :global(html.js) .slot,
+    :global(html.js) .quote-card { animation: none; }
+    :global(html.js) .quote-card { transform: rotate(-3deg); }
+  }
+
   .shelf-board {
     height: 16px;
     border-radius: 2px;
