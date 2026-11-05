@@ -75,10 +75,6 @@ const endCount = (s: string) => books.filter((b) => b.end === s).length;
         <path d="M5 2 L5 26 L11.5 20.5 L16 31 L20.5 29 L16 18.5 L24.5 18.5 Z" fill="#0A2523" stroke="#F4EDE1" stroke-width="2" stroke-linejoin="round"></path>
       </svg>
     </div>
-
-    <div class="cta-row">
-      <a href="#waitlist" class="btn btn-sm" data-i18n="shelf.cta">{t('shelf.cta')}</a>
-    </div>
   </div>
 </section>
 
@@ -289,8 +285,6 @@ const endCount = (s: string) => books.filter((b) => b.end === s).length;
   }
   .ripple { fill: rgba(233, 168, 58, 0.55); opacity: 0; }
 
-  .cta-row { margin: calc(40px * var(--space-scale)) 0 0; display: flex; justify-content: center; }
-
   /* Phones: compact 2-column book grid so the shelf stays in view while the demo plays. */
   @media (max-width: 620px) {
     .status-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; border-radius: 16px; }
@@ -310,6 +304,5 @@ const endCount = (s: string) => books.filter((b) => b.end === s).length;
     .board { padding: 18px 16px; }
     .plank { height: 150px; padding: 0 8px; }
     .count { padding: 10px 8px; }
-    .cta-row .btn { width: 100%; }
   }
 </style>
