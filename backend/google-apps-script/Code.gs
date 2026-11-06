@@ -80,6 +80,13 @@ function notifyOwner_(email, lang, total) {
   }
 }
 
+// Run once from the editor (select "setup" → Run) to grant the sheet and email permissions
+// and create the Waitlist tab. The web app fails with an authorization error until then.
+function setup() {
+  getSheet_();
+  console.log('Waitlist sheet ready. Emails left today: ' + MailApp.getRemainingDailyQuota());
+}
+
 function doGet() {
   return ContentService.createTextOutput('Libramigo waitlist endpoint').setMimeType(ContentService.MimeType.TEXT);
 }
