@@ -28,7 +28,7 @@ jobs:
         env:
           SITE_URL: https://libramigo.az
           # Repository variables (Settings → Secrets and variables → Actions → Variables).
-          PUBLIC_WAITLIST_ENDPOINT: ${{ vars.PUBLIC_WAITLIST_ENDPOINT }}
+          PUBLIC_WAITLIST_ENDPOINT: ${{ vars.PUBLIC_WAITLIST_ENDPOINT || 'https://script.google.com/macros/s/AKfycbwRCvFbuI_KtWODzWYJ0RbQTYox7ZxwfpBDJ8HxfI9YY9BE3AMVf8Ees2fg_2U90Cf-XA/exec' }}
           PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL || 'info@libramigo.az' }}
           PUBLIC_OG_IMAGE: ${{ vars.PUBLIC_OG_IMAGE }}
       - uses: actions/upload-pages-artifact@v4
