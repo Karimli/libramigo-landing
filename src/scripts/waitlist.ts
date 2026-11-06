@@ -69,6 +69,8 @@ export function initWaitlist() {
     }
     busy = true;
     button.setAttribute('aria-busy', 'true');
+    button.disabled = true;
+    input.readOnly = true;
     try {
       await submit(endpoint, {
         email,
@@ -85,6 +87,8 @@ export function initWaitlist() {
     } finally {
       busy = false;
       button.removeAttribute('aria-busy');
+      button.disabled = false;
+      input.readOnly = false;
     }
   });
 }

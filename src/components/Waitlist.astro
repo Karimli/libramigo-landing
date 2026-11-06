@@ -36,7 +36,10 @@ const endpoint = config.waitlistEndpoint;
           data-i18n-attr="placeholder:waitlist.placeholder"
           aria-describedby="waitlist-privacy"
         />
-        <button type="submit" class="btn submit" data-i18n="waitlist.submit">{t('waitlist.submit')}</button>
+        <button type="submit" class="btn submit">
+          <span class="label" data-i18n="waitlist.submit">{t('waitlist.submit')}</span>
+          <span class="spinner" aria-hidden="true"></span>
+        </button>
       </div>
       <input type="hidden" name="lang" value={lang} data-i18n-lang />
       <input type="hidden" name="source" value="landing" />
@@ -103,7 +106,28 @@ const endpoint = config.waitlistEndpoint;
   @media (max-width: 420px) {
     .submit { padding: 0 12px; font-size: max(14px, calc(17px * var(--type-scale))); }
   }
-  .submit[aria-busy='true'] { cursor: progress; opacity: 0.8; }
+  /* Sending: the label keeps the button's width but turns invisible; a spinner sits in its place. */
+  .submit { position: relative; }
+  .submit .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    border: 3px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    opacity: 0;
+  }
+  .submit[aria-busy='true'] { cursor: progress; }
+  .submit[aria-busy='true'] .label { visibility: hidden; }
+  .submit[aria-busy='true'] .spinner { opacity: 1; animation: waitlist-spin 0.7s linear infinite; }
+  .submit:disabled { pointer-events: none; }
+  @keyframes waitlist-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .submit[aria-busy='true'] .spinner { animation-duration: 2s; }
+  }
   .error { margin: 12px 0 0; font-size: calc(17px * var(--type-scale)); color: var(--error-on-dark); }
   .privacy { margin: 18px 0 0; font-size: calc(15px * var(--type-scale)); line-height: 1.5; color: var(--text-on-dark-muted); }
   .done {
