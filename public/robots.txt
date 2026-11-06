@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://libramigo.az/sitemap.xml

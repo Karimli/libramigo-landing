@@ -11,13 +11,34 @@ const url = (path: string) => (Astro.site ? new URL(path, Astro.site).href : pat
 if (!Astro.site && lang === defaultLang) {
   console.warn('[seo] SITE_URL is not set – canonical, hreflang and og:url are relative (search engines expect absolute URLs).');
 }
-if (!config.ogImage && lang === defaultLang) {
-  console.warn('[seo] PUBLIC_OG_IMAGE is not set – share cards have no image.');
-}
 
 const current = languages.find((l) => l.code === lang)!;
 const title = t('meta.title');
 const description = t('meta.description');
+// Share image: per-language card from public/og/ (tools/og-image), unless PUBLIC_OG_IMAGE overrides it.
+const ogImage = config.ogImage || url(`/og/${lang}.png`);
+
+// Structured data for search engines. Only facts that exist today (no logo, no social profiles yet).
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': url('/#organization'),
+      name: t('brand.name'),
+      url: url('/'),
+      ...(config.contactEmail ? { email: config.contactEmail } : {}),
+    },
+    {
+      '@type': 'WebSite',
+      '@id': url('/#website'),
+      name: t('brand.name'),
+      url: url('/'),
+      inLanguage: languages.map((l) => l.code),
+      publisher: { '@id': url('/#organization') },
+    },
+  ],
+};
 ---
 <link rel="canonical" href={url(`/${lang}`)} data-lang-url />
 {languages.map((l) => <link rel="alternate" hreflang={l.code} href={url(`/${l.code}`)} />)}
@@ -31,13 +52,16 @@ const description = t('meta.description');
 <meta property="og:url" content={url(`/${lang}`)} data-lang-url />
 <meta property="og:locale" content={current.ogLocale} />
 {languages.filter((l) => l.code !== lang).map((l) => <meta property="og:locale:alternate" content={l.ogLocale} />)}
-{/* OG image: placeholder until the designer delivers it (set PUBLIC_OG_IMAGE, 1200×630). */}
-{config.ogImage && <meta property="og:image" content={config.ogImage} />}
-{config.ogImage && <meta property="og:image:width" content="1200" />}
-{config.ogImage && <meta property="og:image:height" content="630" />}
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={title} />
 
 <!-- Twitter / X card -->
-<meta name="twitter:card" content={config.ogImage ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} data-i18n-attr="content:meta.title" />
 <meta name="twitter:description" content={description} data-i18n-attr="content:meta.description" />
-{config.ogImage && <meta name="twitter:image" content={config.ogImage} />}
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={title} />
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
