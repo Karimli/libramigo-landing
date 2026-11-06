@@ -31,6 +31,9 @@ The `/exec` URL stays the same. (Saving alone does not update the live web app.)
 | Form post without JavaScript | Small localized HTML page with a link back to the site |
 
 - Emails are trimmed, lower-cased and stored once (a repeat returns `ok: true, duplicate: true`).
+- Each new (non-duplicate) signup sends a notification email to the Google account that owns
+  the script, with Reply-To set to the subscriber. Consumer Gmail quota: about 100 emails/day.
+  The first deployment asks for an extra "Send email as you" permission.
 - Values starting with `= + - @` are prefixed with `'` so Sheets never evaluates them as formulas.
 - `text/plain` is deliberate: Apps Script cannot answer CORS preflight (`OPTIONS`) requests,
   and a `text/plain` POST is a "simple request" that needs none. Apps Script always returns

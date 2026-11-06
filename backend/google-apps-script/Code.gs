@@ -48,10 +48,35 @@ function doPost(e) {
     const duplicate = existing.some(function (row) { return String(row[0]).toLowerCase() === email; });
     if (!duplicate) {
       sheet.appendRow([new Date(), safe_(email), lang, safe_(source), safe_(createdAt)]);
+      notifyOwner_(email, lang, sheet.getLastRow() - 1);
     }
     return respond_(isForm, lang, { ok: true, duplicate: duplicate });
   } finally {
     lock.releaseLock();
+  }
+}
+
+// Emails the script owner about each new signup. Sent to the owner's own Google address
+// (not to info@libramigo.az: Gmail hides a forwarded copy of a message it has in Sent).
+// Reply-To is the subscriber, so "Reply" in Gmail writes to them. A mail failure
+// (e.g. daily quota) must never fail the signup itself.
+function notifyOwner_(email, lang, total) {
+  try {
+    const sheetUrl = SpreadsheetApp.getActiveSpreadsheet().getUrl();
+    MailApp.sendEmail({
+      to: Session.getEffectiveUser().getEmail(),
+      replyTo: email,
+      name: 'Libramigo waitlist',
+      subject: 'Libramigo: yeni qeydiyyat (' + email + ')',
+      body:
+        'Yeni e-poçt gözləmə siyahısına yazıldı.\n\n' +
+        'E-poçt: ' + email + '\n' +
+        'Dil: ' + lang + '\n' +
+        'Siyahıda cəmi: ' + total + '\n\n' +
+        'Cədvəl: ' + sheetUrl,
+    });
+  } catch (err) {
+    console.error('notifyOwner_ failed', err);
   }
 }
 
