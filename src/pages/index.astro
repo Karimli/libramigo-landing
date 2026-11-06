@@ -1,18 +1,22 @@
 ---
 import { codes, defaultLang, storageKey } from '../i18n/languages.mjs';
+import { useTranslations } from '../i18n';
+import SeoHead from '../components/SeoHead.astro';
 
-const url = (path: string) => (Astro.site ? new URL(path, Astro.site).href : path);
+const t = useTranslations(defaultLang);
 ---
 <!doctype html>
 <html lang={defaultLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Libramigo</title>
-    <!-- Language picker page: not indexed itself; points crawlers to the localized pages. -->
+    <title>{t('meta.title')}</title>
+    <meta name="description" content={t('meta.description')} />
+    <!-- Language redirect page: not indexed itself. Link-preview bots (WhatsApp, Telegram,
+         Facebook) don't run the redirect script, so it carries the Azerbaijani share tags,
+         canonical and hreflang. -->
     <meta name="robots" content="noindex, follow" />
-    {codes.map((c) => <link rel="alternate" hreflang={c} href={url(`/${c}`)} />)}
-    <link rel="alternate" hreflang="x-default" href={url(`/${defaultLang}`)} />
+    <SeoHead lang={defaultLang} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- Language: the visitor's own earlier choice, otherwise Azerbaijani (owner decision:
          browser language is not used, so an English browser still lands on /az). -->
