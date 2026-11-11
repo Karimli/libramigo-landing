@@ -13,6 +13,9 @@ const quotes = quoteReaders.map((reader, i) => ({ key: `problem.quotes.q${i + 1}
     <p data-i18n="problem.text">{t('problem.text')}</p>
   </div>
 
+  <!-- Line-art strip (src/lineart/street.ts): a reader walks past with a book. Decorative. -->
+  <div class="street" data-street aria-hidden="true"></div>
+
   <!-- Quote belt: two identical lists glide left forever (CSS only); the copy is hidden from
        assistive tech. Static, swipeable row with reduced motion. -->
   <div class="quotes" data-quotes>
@@ -47,6 +50,10 @@ const quotes = quoteReaders.map((reader, i) => ({ key: `problem.quotes.q${i + 1}
   </div>
 </section>
 
+<script>
+  import { initStreet } from '../lineart/street';
+  initStreet(document.querySelector<HTMLElement>('[data-street]'));
+</script>
 
 <style>
   .problem {
@@ -70,7 +77,21 @@ const quotes = quoteReaders.map((reader, i) => ({ key: `problem.quotes.q${i + 1}
   .inner {
     max-width: var(--content-max);
     margin: 0 auto;
-    padding: calc(120px * var(--space-scale)) var(--gutter) calc(56px * var(--space-scale));
+    padding: calc(120px * var(--space-scale)) var(--gutter) calc(20px * var(--space-scale));
+  }
+  /* Walking reader: the SVG is drawn by script, so its nodes need :global. */
+  .street {
+    height: 120px;
+    margin-bottom: calc(28px * var(--space-scale));
+    color: var(--green-900);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+  .street :global(svg) { display: block; }
+  .street :global(.pp) { fill: var(--paper); }
+  @media (max-width: 620px) {
+    .street { height: 96px; }
   }
   h2 {
     margin: 0;
