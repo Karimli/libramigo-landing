@@ -1,7 +1,8 @@
-// Waitlist scene: a post box stands at the foot of the section. When someone joins the list
-// (document event "libramigo:waitlist-joined", sent by src/scripts/waitlist.ts) the boy from the
-// hero walks up with an envelope, posts it, the box's flag goes up, he waves and walks on.
-// Nothing runs until then. Reduced motion: the box, then a still of the boy beside it.
+// Waitlist scene: a post box stands at the foot of the section. The first time it scrolls into
+// view the boy from the hero walks up with an envelope, posts it, the box's flag goes up, he
+// waves and walks on. When someone joins the list (document event "libramigo:waitlist-joined",
+// sent by src/scripts/waitlist.ts) he comes back with another letter. Nothing runs in between.
+// Reduced motion: just the box, then a still of the boy beside it after joining.
 
 import { el, shape, paint, inkDefs, run, f, PEN, type Vec } from './lib/ink.ts';
 import { spring, ease, clamp } from './lib/motion.ts';
@@ -106,13 +107,34 @@ export function initPostbox(root: HTMLElement | null, boyHeight = 96) {
     }
     letter.setAttribute('opacity', carry ? f(alpha) : '0');
     setFlag(flagAngle.step(flagUp ? 0 : FLAG_DOWN, dt));
-    // once he has gone and the flag has settled there is nothing left to animate
-    if (phase === 'done' && clock > 1.5 && stop) { stop(); stop = null; }
+    if (phase === 'done') {
+      if (pending) { if (clock > 0.6) { pending = false; begin(); } } // someone joined while he was busy: back with a second letter after a beat
+      else if (clock > 1.5 && stop) { stop(); stop = null; } // flag settled, nothing left to animate
+    }
   };
 
+  /** He walks in with a letter. Starts the loop if it isn't running. */
+  let pending = false;
+  function begin() {
+    boy.x = Math.max(-30, standX() - 150);
+    boy.dir = 1;
+    alpha = 0;
+    next('enter');
+    if (!stop) stop = run(draw);
+  }
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // First time the scene scrolls into view he posts a letter, to show what the box is for.
+  const seen = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    seen.disconnect();
+    if (phase === 'idle' && !reduced()) begin();
+  }, { threshold: 0.6 });
+  seen.observe(root);
+
+  // Joining the list sends him back with another one.
   document.addEventListener(JOINED_EVENT, () => {
-    if (phase !== 'idle') return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (reduced()) {
       // a still: the letter is posted, the flag is up, he stands by the box waving
       phase = 'done'; flagUp = true;
       boy.x = standX(); boy.dir = 1;
@@ -121,10 +143,7 @@ export function initPostbox(root: HTMLElement | null, boyHeight = 96) {
       setFlag(0);
       return;
     }
-    boy.x = Math.max(-30, standX() - 150);
-    boy.dir = 1;
-    alpha = 0;
-    next('enter');
-    stop = run(draw);
+    seen.disconnect();
+    if (phase === 'idle' || phase === 'done') begin(); else pending = true;
   });
 }

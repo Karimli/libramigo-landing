@@ -38,9 +38,13 @@ export function initTalk(root: HTMLElement | null) {
     });
   });
 
-  // Scene units are CSS pixels; the ground sits just above the overlay's bottom edge.
+  // Scene units are CSS pixels; the ground sits just above the overlay's bottom edge. With
+  // --on-card: 1 (set in CSS for narrow screens) they sit directly on whatever is underneath,
+  // so the ground is the bottom edge itself and no line is drawn.
   const measure = () => {
-    const w = root.clientWidth, h = root.clientHeight, g = h - 3, mid = w / 2;
+    const onCard = getComputedStyle(root).getPropertyValue('--on-card').trim() === '1';
+    const w = root.clientWidth, h = root.clientHeight, g = onCard ? h : h - 3, mid = w / 2;
+    ground.style.display = onCard ? 'none' : '';
     svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
     let d = `M0 ${g}`;
     for (let x = 16, i = 1; x < w + 16; x += 16, i++) d += ` L${Math.min(x, w)} ${(g + 0.3 * Math.sin(i * 1.7)).toFixed(2)}`;

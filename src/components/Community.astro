@@ -87,7 +87,9 @@ const formats = [
 
   /* Heading on the left, the two readers talking on the right; stacked on narrow screens. */
   .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px 48px; flex-wrap: wrap; }
-  .head-text { flex: 1 1 520px; min-width: 0; }
+  .head-text { flex: 1 1 320px; min-width: 0; }
+  /* Even lines instead of one long line with a single word under it. */
+  .head-text :global(.section-title) { max-width: 13em; text-wrap: balance; }
   .talk {
     flex: 0 0 auto;
     width: 340px;
@@ -97,6 +99,15 @@ const formats = [
   }
   .talk :global(svg) { display: block; }
   .talk :global(.pp) { fill: var(--section-bg); }
+  /* Narrow screens: the readers sit on top of the first card, centred over it. */
+  @media (max-width: 760px) {
+    .head { gap: 20px; }
+    .talk { --on-card: 1; width: calc(50% - 12px); }
+    .inner .tickets { margin-top: 0; }
+  }
+  @media (max-width: 620px) {
+    .talk { width: 100%; }
+  }
 
   /* 4 → 2 → 1 columns; never a 3 + 1 split. */
   .tickets {
