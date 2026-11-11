@@ -1,6 +1,6 @@
 // Waitlist scene: a post box stands at the foot of the section. While it is on screen the boy
-// from the hero walks up with an envelope now and then (first when it scrolls into view, then
-// every 15–20 s), posts it, the box's flag goes up, he waves and walks on. When someone joins
+// from the hero walks up with an envelope again and again (first when it scrolls into view, then
+// 5 s after each time he leaves), posts it, the box's flag goes up, he waves and walks on. When someone joins
 // the list (document event "libramigo:waitlist-joined", sent by src/scripts/waitlist.ts) he
 // comes straight back with another letter. Nothing runs between visits.
 // Reduced motion: just the box, then a still of the boy beside it after joining.
@@ -14,6 +14,7 @@ export const JOINED_EVENT = 'libramigo:waitlist-joined';
 type Phase = 'idle' | 'enter' | 'reach' | 'post' | 'lower' | 'wave' | 'leave' | 'done';
 const REACH = 0.4, POST = 0.5, LOWER = 0.35, WAVE = 1.9;
 const FLAG_DOWN = 118; // degrees from upright
+const NEXT_VISIT = 5; // seconds between him leaving and coming back with the next letter
 
 export function initPostbox(root: HTMLElement | null, boyHeight = 96) {
   if (!root) return;
@@ -97,7 +98,7 @@ export function initPostbox(root: HTMLElement | null, boyHeight = 96) {
       if (boy.x >= exitX()) {
         next('done'); alpha = 0;
         clearTimeout(timer);
-        timer = window.setTimeout(() => { due = true; visit(); }, 15000 + Math.random() * 5000);
+        timer = window.setTimeout(() => { due = true; visit(); }, NEXT_VISIT * 1000);
       }
     } else {
       carry = false;
@@ -114,7 +115,14 @@ export function initPostbox(root: HTMLElement | null, boyHeight = 96) {
     setFlag(flagAngle.step(flagUp ? 0 : FLAG_DOWN, dt));
     if (phase === 'done') {
       if (pending) { if (clock > 0.6) { pending = false; begin(); } } // someone joined while he was busy: back with a second letter after a beat
-      else if (clock > 1.5 && stop) { stop(); stop = null; } // flag settled, nothing left to animate
+      else if (clock > 1.5 && stop) {
+        // Flag settled, nothing left to animate. The loop schedules its next frame after this
+        // draw returns, so cancel it afterwards: cancelling here would leave it running, and
+        // the next visit would start a second loop on top (everything at double speed).
+        const cancel = stop;
+        stop = null;
+        setTimeout(cancel, 0);
+      }
     }
   };
 
@@ -132,7 +140,7 @@ export function initPostbox(root: HTMLElement | null, boyHeight = 96) {
   const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // While the scene is on screen he posts a letter now and then: first when it scrolls into
-  // view, then every 15–20 s after he has left. Off screen, the next visit waits for the return.
+  // view, then NEXT_VISIT seconds after he has left. Off screen, the next visit waits for the return.
   let visible = false, due = true, timer = 0;
   const visit = () => {
     if (reduced() || !visible || (phase !== 'idle' && phase !== 'done')) return;
