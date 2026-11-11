@@ -1,7 +1,8 @@
-// Waitlist scene: a post box stands at the foot of the section. The first time it scrolls into
-// view the boy from the hero walks up with an envelope, posts it, the box's flag goes up, he
-// waves and walks on. When someone joins the list (document event "libramigo:waitlist-joined",
-// sent by src/scripts/waitlist.ts) he comes back with another letter. Nothing runs in between.
+// Waitlist scene: a post box stands at the foot of the section. While it is on screen the boy
+// from the hero walks up with an envelope now and then (first when it scrolls into view, then
+// every 15–20 s), posts it, the box's flag goes up, he waves and walks on. When someone joins
+// the list (document event "libramigo:waitlist-joined", sent by src/scripts/waitlist.ts) he
+// comes straight back with another letter. Nothing runs between visits.
 // Reduced motion: just the box, then a still of the boy beside it after joining.
 
 import { el, shape, paint, inkDefs, run, f, PEN, type Vec } from './lib/ink.ts';
@@ -93,7 +94,11 @@ export function initPostbox(root: HTMLElement | null, boyHeight = 96) {
       carry = false;
       goAim = 1;
       alpha = clamp((exitX() - boy.x) / 40, 0, 1);
-      if (boy.x >= exitX()) { next('done'); alpha = 0; }
+      if (boy.x >= exitX()) {
+        next('done'); alpha = 0;
+        clearTimeout(timer);
+        timer = window.setTimeout(() => { due = true; visit(); }, 15000 + Math.random() * 5000);
+      }
     } else {
       carry = false;
     }
@@ -119,18 +124,25 @@ export function initPostbox(root: HTMLElement | null, boyHeight = 96) {
     boy.x = Math.max(-30, standX() - 150);
     boy.dir = 1;
     alpha = 0;
+    flagUp = false; // the last letter has been collected
+    clearTimeout(timer);
     next('enter');
     if (!stop) stop = run(draw);
   }
   const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // First time the scene scrolls into view he posts a letter, to show what the box is for.
-  const seen = new IntersectionObserver(([entry]) => {
-    if (!entry.isIntersecting) return;
-    seen.disconnect();
-    if (phase === 'idle' && !reduced()) begin();
-  }, { threshold: 0.6 });
-  seen.observe(root);
+  // While the scene is on screen he posts a letter now and then: first when it scrolls into
+  // view, then every 15–20 s after he has left. Off screen, the next visit waits for the return.
+  let visible = false, due = true, timer = 0;
+  const visit = () => {
+    if (reduced() || !visible || (phase !== 'idle' && phase !== 'done')) return;
+    due = false;
+    begin();
+  };
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    if (visible && due) visit();
+  }, { threshold: 0.6 }).observe(root);
 
   // Joining the list sends him back with another one.
   document.addEventListener(JOINED_EVENT, () => {
@@ -143,7 +155,6 @@ export function initPostbox(root: HTMLElement | null, boyHeight = 96) {
       setFlag(0);
       return;
     }
-    seen.disconnect();
     if (phase === 'idle' || phase === 'done') begin(); else pending = true;
   });
 }
