@@ -74,6 +74,8 @@ const spines = [
           </div>
         ))}
       </div>
+      <!-- Line-art boy browsing the shelf, drawn by script (src/lineart/browser.ts). -->
+      <div class="browser" data-hero-browser></div>
     </div>
   </div>
   <div class="shelf-board" aria-hidden="true"></div>
@@ -199,6 +201,20 @@ const spines = [
     min-width: 0;
   }
   .slot-lean { margin-left: 14px; }
+  /* The boy stands on the board in front of the books; only he takes pointer events. */
+  .browser {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 190px;
+    z-index: 1;
+    color: var(--green-900);
+    pointer-events: none;
+  }
+  .browser :global(svg) { display: block; }
+  .browser :global(.pp) { fill: var(--paper-card); }
+  :global(html.js) .slot:not(.slot-lean) { cursor: pointer; }
   .spine {
     width: 100%;
     height: var(--h);

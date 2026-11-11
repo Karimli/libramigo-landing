@@ -1,13 +1,12 @@
 // Hero shelf animation (GSAP). Entrance: the board slides in, spines rise one by one, the last
-// book tips over against its neighbour, the quote card drops in. Idle: the card floats, a random
-// book is "pulled" now and then, and the card cycles through reader quotes.
-// Everything idles only while the hero is on screen. Reduced motion: static hero (CSS).
+// book tips over against its neighbour, the quote card drops in. Idle: the card floats and a
+// line-art boy browses the shelf (src/lineart/browser.ts): each book he touches lifts out and
+// the card turns to the next reader quote. Clicking a book sends him to it.
+// Everything idles only while the hero is on screen. Reduced motion: static hero, boy standing.
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-const PULL_EVERY = 3.2; // s between "someone picks a book"
-const SWAP_EVERY = 7; // s between quotes
+import { createShelfBrowser } from '../lineart/browser';
 
 export function initHeroAnimation() {
   const hero = document.querySelector<HTMLElement>('.hero');
@@ -26,8 +25,16 @@ export function initHeroAnimation() {
   const source = card.querySelector<HTMLElement>('[data-hero-source]')!;
   const pool = [...hero.querySelectorAll<HTMLElement>('[data-hero-pool] > div')];
   pool.forEach((p) => (new Image().src = p.dataset.avatar!)); // warm the avatar cache
+  const browserRoot = hero.querySelector<HTMLElement>('[data-hero-browser]');
+  const books = slots.filter((s) => s !== lean); // the leaning book stays put
 
   const mm = gsap.matchMedia();
+  mm.add('(prefers-reduced-motion: reduce)', () => {
+    if (!browserRoot) return;
+    const browser = createShelfBrowser({ root: browserRoot, books, onTouch: () => {} });
+    browser.drawStill();
+    return () => browser.destroy();
+  });
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     let onScreen = true;
     let current = 0;
@@ -52,18 +59,12 @@ export function initHeroAnimation() {
     // ---------- idle ----------
     const float = gsap.to(card, { y: -7, duration: 2.6, ease: 'sine.inOut', yoyo: true, repeat: -1, paused: true });
 
-    const pullable = slots.filter((s) => s !== lean);
-    let lastPulled: HTMLElement | null = null;
-    const pull = () => {
-      if (onScreen) {
-        const choices = pullable.filter((s) => s !== lastPulled);
-        const slot = choices[Math.floor(Math.random() * choices.length)];
-        lastPulled = slot;
-        gsap.timeline()
-          .to(slot, { y: -22, duration: 0.45, ease: 'power2.out' })
-          .to(slot, { y: 0, duration: 0.6, ease: 'bounce.out' }, '+=0.35');
-      }
-      pullCall = gsap.delayedCall(PULL_EVERY, pull);
+    // a touched book lifts out of the row, hangs a moment, and drops back
+    const lift = (slot: HTMLElement) => {
+      gsap.killTweensOf(slot);
+      gsap.timeline()
+        .to(slot, { y: -26, duration: 0.4, ease: 'back.out(2.2)' })
+        .to(slot, { y: 0, duration: 0.6, ease: 'bounce.out' }, '+=0.6');
     };
 
     const fill = (i: number) => {
@@ -86,26 +87,35 @@ export function initHeroAnimation() {
       }
     };
 
+    let swapping: gsap.core.Timeline | null = null;
     const swap = () => {
-      if (onScreen && pool.length > 1) {
-        current = (current + 1) % pool.length;
-        const h0 = card.offsetHeight;
-        gsap.timeline()
-          .to(body, { autoAlpha: 0, y: -8, duration: 0.3, ease: 'power2.in' })
-          .add(() => {
-            fill(current);
-            const h1 = card.offsetHeight;
-            gsap.fromTo(card, { height: h0 }, { height: h1, duration: 0.35, ease: 'power2.out', clearProps: 'height' });
-          })
-          .fromTo(body, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '+=0.05')
-          .to(card, { rotation: -1.5, duration: 0.25, yoyo: true, repeat: 1, ease: 'sine.inOut' }, '<');
-      }
-      swapCall = gsap.delayedCall(SWAP_EVERY, swap);
+      if (pool.length < 2 || swapping?.isActive()) return;
+      current = (current + 1) % pool.length;
+      const h0 = card.offsetHeight;
+      swapping = gsap.timeline()
+        .to(body, { autoAlpha: 0, y: -8, duration: 0.3, ease: 'power2.in' })
+        .add(() => {
+          fill(current);
+          const h1 = card.offsetHeight;
+          gsap.fromTo(card, { height: h0 }, { height: h1, duration: 0.35, ease: 'power2.out', clearProps: 'height' });
+        })
+        .fromTo(body, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '+=0.05')
+        .to(card, { rotation: -1.5, duration: 0.25, yoyo: true, repeat: 1, ease: 'sine.inOut' }, '<');
     };
 
-    let pullCall = gsap.delayedCall(PULL_EVERY + 1.5, pull);
-    let swapCall = gsap.delayedCall(SWAP_EVERY, swap);
-    intro.eventCallback('onComplete', () => float.play());
+    // the boy arrives once the shelf is up
+    const browser = browserRoot ? createShelfBrowser({ root: browserRoot, books, onTouch: (book) => { lift(book); swap(); } }) : null;
+    let browsing = false;
+    if (browserRoot) gsap.set(browserRoot, { autoAlpha: 0 });
+    const tick = (time: number, deltaMs: number) => {
+      if (browsing && onScreen) browser?.step(time, Math.min(0.05, deltaMs / 1000));
+    };
+    gsap.ticker.add(tick);
+    intro.eventCallback('onComplete', () => {
+      float.play();
+      browsing = true;
+      if (browserRoot) gsap.to(browserRoot, { autoAlpha: 1, duration: 0.6 });
+    });
 
     // pause the idle loop while the hero is off screen
     const st = ScrollTrigger.create({
@@ -123,10 +133,11 @@ export function initHeroAnimation() {
       st.kill();
       intro.kill();
       float.kill();
-      pullCall.kill();
-      swapCall.kill();
+      swapping?.kill();
+      gsap.ticker.remove(tick);
+      browser?.destroy();
       fill(0);
-      gsap.set([card, board, ...slots], { clearProps: 'all' });
+      gsap.set([card, board, body, ...slots, ...(browserRoot ? [browserRoot] : [])], { clearProps: 'all' });
     };
   });
 }
