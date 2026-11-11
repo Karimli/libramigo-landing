@@ -79,20 +79,6 @@ const t = useTranslations(lang);
     text-decoration: none;
     color: var(--paper);
   }
-  /* On load the wordmark is written in from left to right, like ink from a pen: a mask with a
-     soft edge slides across it once. CSS only; without mask support it is simply visible. */
-  @media (prefers-reduced-motion: no-preference) {
-    .logo {
-      padding: 0.1em 0.14em 0.16em 0.04em; /* room for the italic overhang and descender inside the mask */
-      margin-left: -0.04em;
-      -webkit-mask: linear-gradient(90deg, #000 0 50%, transparent 58%) 100% 0 / 250% 100% no-repeat;
-      mask: linear-gradient(90deg, #000 0 50%, transparent 58%) 100% 0 / 250% 100% no-repeat;
-      animation: logo-write 1s cubic-bezier(0.5, 0, 0.3, 1) 0.2s both;
-    }
-  }
-  @keyframes logo-write {
-    to { -webkit-mask-position: 0 0; mask-position: 0 0; }
-  }
   .menu {
     display: flex;
     flex-wrap: wrap;
