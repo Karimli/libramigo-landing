@@ -81,6 +81,8 @@ export function initWaitlist() {
       showError(null);
       form.hidden = true;
       done.hidden = false;
+      // the line-art scene under the form reacts to this (src/lineart/postbox.ts)
+      document.dispatchEvent(new CustomEvent('libramigo:waitlist-joined'));
     } catch (err) {
       console.error('[waitlist] submission failed', err);
       showError('network');

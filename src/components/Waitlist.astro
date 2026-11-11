@@ -58,11 +58,15 @@ const endpoint = config.waitlistEndpoint;
       <p data-i18n="waitlist.success">{t('waitlist.success')}</p>
     </div>
   </div>
+  <!-- Line-art post box; the boy posts a letter when someone joins (src/lineart/postbox.ts). Decorative. -->
+  <div class="postbox" data-postbox aria-hidden="true"></div>
 </section>
 
 <script>
   import { initWaitlist } from '../scripts/waitlist';
+  import { initPostbox } from '../lineart/postbox';
   initWaitlist();
+  initPostbox(document.querySelector<HTMLElement>('[data-postbox]'));
 </script>
 
 <style>
@@ -72,6 +76,23 @@ const endpoint = config.waitlistEndpoint;
     padding: calc(120px * var(--space-scale)) var(--gutter) calc(128px * var(--space-scale));
   }
   .inner { max-width: 720px; }
+  /* Post box scene: sits in the section's bottom padding, standing on the footer's edge. */
+  .waitlist { position: relative; }
+  .postbox {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 0;
+    height: 104px;
+    color: var(--paper);
+    pointer-events: none;
+  }
+  .postbox :global(svg) { display: block; }
+  .postbox :global(.pp) { fill: var(--green-700); }
+  /* Phones have less bottom padding: keep the scene clear of the privacy line. */
+  @media (max-width: 700px) {
+    .waitlist { padding-bottom: 122px; }
+  }
   h2 {
     margin: 0;
     font-size: clamp(calc(36px * var(--type-scale)), calc(4.4vw * var(--type-scale)), calc(62px * var(--type-scale)));

@@ -2,7 +2,7 @@
 // looks up at it, or waves. The caller decides what he does each frame (see BoyState).
 // Built on the line-art library in ./lib (figure space: feet on y = 120, facing +x, at x = 40).
 
-import { el, shape, blot, paint, limb, solid, shoe, place, joint, f, PEN, PAPER, type Vec } from './lib/ink.ts';
+import { el, shape, blot, paint, limb, solid, shoe, place, joint, toScene, f, PEN, PAPER, type Vec } from './lib/ink.ts';
 import { gait } from './lib/gait.ts';
 import { spring, clamp } from './lib/motion.ts';
 
@@ -34,6 +34,8 @@ export interface Boy {
   readonly reachAhead: number;
   /** Walking speed in scene units per second at go = 1. */
   readonly speed: number;
+  /** Scene position of the near hand after the last update (for things he carries). */
+  hand: Vec;
   update(t: number, dt: number, groundY: number, state: BoyState): void;
 }
 
@@ -66,6 +68,7 @@ export function createBoy(parent: Element, opts: BoyOptions = {}): Boy {
     dir: 1,
     reachAhead: (REACH_X - 40) * scale,
     speed: walk.speed * scale,
+    hand: [0, 0],
     update(t, dt, groundY, { go, reach, look, wave }) {
       phase += (dt / walk.period) * go;
       self.x += self.dir * walk.speed * scale * dt * go; // exactly the gait's speed, so planted feet don't slide
@@ -107,6 +110,7 @@ export function createBoy(parent: Element, opts: BoyOptions = {}): Boy {
         hand = lerpP(hand, target, wave);
       }
       nearArm.draw([shN, elbow, hand], [0.2, 0.4]);
+      self.hand = toScene(self.x, groundY, self.dir, hand[0], hand[1], scale);
     },
   };
   return self;
