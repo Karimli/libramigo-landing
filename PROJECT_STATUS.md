@@ -58,7 +58,7 @@ Xətt-rəsm səhnələri:
 | Səhnə | Bölmə | Davranış | Fayl |
 |---|---|---|---|
 | Rəfdə gəzən oğlan | Hero | Kitaba toxunur, kitab qalxır, sitat kartı dəyişir. Kitaba kliklədikdə ona gedir, özünə kliklədikdə əl yelləyir. | `browser.ts`, `boy.ts` |
-| Kartların üstü ilə gəzən oxucu | Problem | Sitat kartlarının üstü ilə kitab oxuya-oxuya yeriyir. Kartlar sola sürüşdüyü üçün ekranın təxminən eyni yerində qalır, kartlar arasındakı boşluqda tullanır. Kliklədikdə əl yelləyir, siçan hərəkəti şərfini yelləyir. | `beltwalk.ts`, `reader.ts` |
+| Kartların üstü ilə gəzən oxucu | Problem | Sitat kartlarının üstü ilə kitab oxuya-oxuya yeriyir. Kartlar sola sürüşür, o isə bir az sürətli yeriyir: ekranı yavaşca soldan sağa keçir, sağ kənarda itir və soldan yenidən gəlir. Kartlar arasındakı boşluqda tullanır. Kliklədikdə əl yelləyir, siçan hərəkəti şərfini yelləyir. | `beltwalk.ts`, `reader.ts` |
 | Söhbət edən iki oxucu | İcma | Növbə ilə danışır və dinləyirlər. Kliklədikdə söz ona keçir. Həmişə bir kartın üstündə otururlar: geniş ekranda sonuncu (dördüncü), iki sütunda sağdakı, telefonda birinci kartın. | `talk.ts`, `sitter.ts` |
 | Poçt qutusu | Gözləmə siyahısı | Bölmə ekranda olanda oğlan məktub atır, gedəndən 5 saniyə sonra qayıdır. Qeydiyyatdan sonra dərhal gəlir. | `postbox.ts`, `boy.ts` |
 | Kartın küncündə oturan oxucu | Yol xəritəsi | "İdeya mərhələsi" kartının sağ üst küncündə oturub ayaqlarını sallayaraq kitab oxuyur. Kliklədikdə əl yelləyir. | `perch.ts`, `percher.ts` |
