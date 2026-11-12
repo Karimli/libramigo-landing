@@ -91,4 +91,17 @@ const personas = [
   }
   .persona li { display: flex; gap: 10px; }
   .persona li svg { flex: 0 0 auto; margin-top: 2px; }
+  /* Cards in one row share their row heights (icon, title, text, list), so a title that wraps
+     to two lines in one card (Russian) doesn't push that card's text and list out of line with
+     its neighbours. Without subgrid support the cards simply lay out on their own. */
+  @supports (grid-template-rows: subgrid) {
+    .persona-wrap,
+    .persona {
+      display: grid;
+      grid-row: span 4;
+      grid-template-rows: subgrid;
+      row-gap: 0;
+    }
+    .persona ul { align-self: start; }
+  }
 </style>
