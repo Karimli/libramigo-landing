@@ -37,7 +37,6 @@ const stages = [
               <span class="chapter-num serif">{s.n}</span>
             </div>
             <article class="stage-card">
-              {s.current && <span class="ribbon" aria-hidden="true"></span>}
               {/* Line-art reader perched on the card's corner (src/lineart/perch.ts). Decorative. */}
               {s.current && <div class="perch" data-perch aria-hidden="true"></div>}
               <div class="stage-top">
@@ -77,7 +76,7 @@ const stages = [
     margin: 0 auto;
     padding: calc(120px * var(--space-scale)) var(--gutter);
   }
-  /* Room around the row so the pulsing dot, ribbon, hover lift and shadows are not
+  /* Room around the row so the pulsing dot, hover lift and shadows are not
      clipped by the scroller (overflow-x also clips vertically). */
   .timeline-scroller {
     --pad: 16px;
@@ -159,16 +158,6 @@ const stages = [
     border: 1.5px solid var(--paper-line);
   }
   .current .stage-card { border-color: var(--green-900); box-shadow: 0 14px 30px rgba(10, 37, 35, 0.12); }
-  .current .stage-top { padding-right: 76px; } /* room for the ribbon, which hangs left of the perched reader */
-  .ribbon {
-    position: absolute;
-    top: -5px;
-    right: 60px;
-    width: 18px;
-    height: 46px;
-    background: var(--red);
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
-  }
   /* Overlay for the perched reader: the card's top edge is 64px below the overlay's top and its
      right edge 38px left of the overlay's right (SEAT and EDGE in src/lineart/perch.ts). */
   .perch {
