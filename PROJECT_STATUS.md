@@ -59,7 +59,7 @@ Xətt-rəsm səhnələri:
 |---|---|---|---|
 | Rəfdə gəzən oğlan | Hero | Kitaba toxunur, kitab qalxır, sitat kartı dəyişir. Kitaba kliklədikdə ona gedir, özünə kliklədikdə əl yelləyir. | `browser.ts`, `boy.ts` |
 | Kitabla gəzən oxucu | Problem | Zolaq boyu gəzir. Kliklədikdə əl yelləyir, siçan hərəkəti şərfini yelləyir. | `street.ts`, `reader.ts` |
-| Söhbət edən iki oxucu | İcma | Növbə ilə danışır və dinləyirlər. Kliklədikdə söz ona keçir. Telefonda birinci kartın üstündə otururlar. | `talk.ts`, `sitter.ts` |
+| Söhbət edən iki oxucu | İcma | Növbə ilə danışır və dinləyirlər. Kliklədikdə söz ona keçir. Həmişə bir kartın üstündə otururlar: geniş ekranda sonuncu (dördüncü), iki sütunda sağdakı, telefonda birinci kartın. | `talk.ts`, `sitter.ts` |
 | Poçt qutusu | Gözləmə siyahısı | Bölmə ekranda olanda oğlan məktub atır, gedəndən 5 saniyə sonra qayıdır. Qeydiyyatdan sonra dərhal gəlir. | `postbox.ts`, `boy.ts` |
 | Kartın küncündə oturan oxucu | Yol xəritəsi | "İdeya mərhələsi" kartının sağ üst küncündə oturub ayaqlarını sallayaraq kitab oxuyur. Kliklədikdə əl yelləyir. | `perch.ts`, `percher.ts` |
 
