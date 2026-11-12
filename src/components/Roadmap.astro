@@ -38,6 +38,8 @@ const stages = [
             </div>
             <article class="stage-card">
               {s.current && <span class="ribbon" aria-hidden="true"></span>}
+              {/* Line-art reader perched on the card's corner (src/lineart/perch.ts). Decorative. */}
+              {s.current && <div class="perch" data-perch aria-hidden="true"></div>}
               <div class="stage-top">
                 <span class="when" data-i18n={`${k}.when`}>{t(`${k}.when`)}</span>
                 <span class:list={['pill', s.pill]} data-i18n={`${k}.status`}>{t(`${k}.status`)}</span>
@@ -64,6 +66,11 @@ const stages = [
   </div>
 </section>
 
+<script>
+  import { initPerch } from '../lineart/perch';
+  initPerch(document.querySelector<HTMLElement>('[data-perch]'));
+</script>
+
 <style>
   .inner {
     max-width: var(--content-max);
@@ -74,8 +81,9 @@ const stages = [
      clipped by the scroller (overflow-x also clips vertically). */
   .timeline-scroller {
     --pad: 16px;
-    margin: calc(64px * var(--space-scale) - var(--pad)) 0 calc(-1 * var(--pad) - 32px) calc(-1 * var(--pad));
-    padding: var(--pad) 0 calc(var(--pad) + 32px) var(--pad);
+    --pad-top: 30px; /* more on top: the perched reader's head and waving hand rise above the label */
+    margin: calc(64px * var(--space-scale) - var(--pad-top)) 0 calc(-1 * var(--pad) - 32px) calc(-1 * var(--pad));
+    padding: var(--pad-top) 0 calc(var(--pad) + 32px) var(--pad);
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x proximity;
@@ -151,16 +159,31 @@ const stages = [
     border: 1.5px solid var(--paper-line);
   }
   .current .stage-card { border-color: var(--green-900); box-shadow: 0 14px 30px rgba(10, 37, 35, 0.12); }
-  .current .stage-top { padding-right: 34px; } /* room for the ribbon */
+  .current .stage-top { padding-right: 76px; } /* room for the ribbon, which hangs left of the perched reader */
   .ribbon {
     position: absolute;
     top: -5px;
-    right: 18px;
+    right: 60px;
     width: 18px;
     height: 46px;
     background: var(--red);
     clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
   }
+  /* Overlay for the perched reader: the card's top edge is 64px below the overlay's top and its
+     right edge 38px left of the overlay's right (SEAT and EDGE in src/lineart/perch.ts). */
+  .perch {
+    position: absolute;
+    top: -64px;
+    right: -38px;
+    width: 112px;
+    height: 112px;
+    z-index: 1;
+    color: var(--green-900);
+    pointer-events: none;
+    --perch-scale: 1.2;
+  }
+  .perch :global(svg) { display: block; }
+  .perch :global(.pp) { fill: var(--paper); }
   .stage-top {
     display: flex;
     flex-wrap: wrap;
@@ -204,5 +227,6 @@ const stages = [
     .chapter .stem { order: 1; }
     .chapter .chapter-label { order: 2; }
     .chapter .stage-card { order: 3; }
+    .perch { --perch-scale: 1; } /* the rail runs just above: keep the head under it */
   }
 </style>

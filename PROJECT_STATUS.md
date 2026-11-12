@@ -28,7 +28,7 @@ Saytda nəsə dəyişəndə bu faylı da yeniləyin.
 | 3 | Necə işləyir | `HowItWorks.astro` | Üç addım kartı, hər birində mini interfeys nümunəsi. |
 | 4 | Rəfini qur | `ShelfBuilder.astro` | Yalnız izlənən demo: kursor kitabları seçir, onlar rəfə düşür. |
 | 5 | Kimin üçündür | `WhoFor.astro` | Üç persona kartı. |
-| 6 | Yol xəritəsi | `Roadmap.astro` | Dörd mərhələli zaman xətti. |
+| 6 | Yol xəritəsi | `Roadmap.astro` | Dörd mərhələli zaman xətti. Hazırkı mərhələnin kartında oturub kitab oxuyan oxucu. |
 | 7 | İcma | `Community.astro` | Dörd "bilet" kartı (klub, çağırış, görüşlər, müəlliflər), hamısı "Hazırlanır" statusunda. Söhbət edən iki oxucu. |
 | 8 | Gözləmə siyahısı | `Waitlist.astro` | E-poçt formu. Poçt qutusu səhnəsi. |
 | 9 | Footer | `Footer.astro` | © və `info@libramigo.az` keçidi. |
@@ -51,7 +51,7 @@ Saytda nəsə dəyişəndə bu faylı da yeniləyin.
 |---|---|---|
 | CSS | Kartların görünməsi, sitat lenti, yol xəritəsi xətti, mini interfeyslər | `src/styles/animations.css` |
 | GSAP | Hero-nun girişi və sitat kartı, "Rəfini qur" demosu | `src/scripts/hero.ts`, `shelf.ts` |
-| Xətt-rəsm (SVG) | Dörd səhnə, aşağıdakı cədvəl | `src/lineart/` |
+| Xətt-rəsm (SVG) | Beş səhnə, aşağıdakı cədvəl | `src/lineart/` |
 
 Xətt-rəsm səhnələri:
 
@@ -61,6 +61,7 @@ Xətt-rəsm səhnələri:
 | Kitabla gəzən oxucu | Problem | Zolaq boyu gəzir. Kliklədikdə əl yelləyir, siçan hərəkəti şərfini yelləyir. | `street.ts`, `reader.ts` |
 | Söhbət edən iki oxucu | İcma | Növbə ilə danışır və dinləyirlər. Kliklədikdə söz ona keçir. Telefonda birinci kartın üstündə otururlar. | `talk.ts`, `sitter.ts` |
 | Poçt qutusu | Gözləmə siyahısı | Bölmə ekranda olanda oğlan məktub atır, gedəndən 5 saniyə sonra qayıdır. Qeydiyyatdan sonra dərhal gəlir. | `postbox.ts`, `boy.ts` |
+| Kartın küncündə oturan oxucu | Yol xəritəsi | "İdeya mərhələsi" kartının sağ üst küncündə oturub ayaqlarını sallayaraq kitab oxuyur. Kliklədikdə əl yelləyir. | `perch.ts`, `percher.ts` |
 
 Bütün animasiyalar üçün qaydalar:
 - Hərəkəti azaltma ayarı (`prefers-reduced-motion`) açıq olanda heç nə hərəkət etmir, məzmun son vəziyyətində görünür.
