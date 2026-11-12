@@ -1,5 +1,6 @@
 // A reader walking with an open book: head down in the pages, scarf trailing behind.
 // Click (wave()) and the reader stops, looks up and waves, then goes back to the book.
+// The caller can slow or quicken the walk (rate) and make the reader leap (leap), still reading.
 // Built on the line-art library in ./lib (figure space: feet on y = 120, facing +x, at x = 40).
 
 import { el, pen, shape, blot, paint, limb, shoe, place, joint, f, PEN, PAPER, type Vec } from './lib/ink.ts';
@@ -13,6 +14,10 @@ export interface ReaderOptions {
   /** Hair: a bun at the back, or short. */
   hair?: 'bun' | 'short';
   gait?: GaitKind;
+  /** Seconds for one full left+right step cycle (default: the gait's own). */
+  period?: number;
+  /** Distance a planted foot travels under the body, in figure units (default: the gait's own). */
+  stride?: number;
   /** Figure scale in scene units (1 → about 95 units tall). */
   scale?: number;
   dir?: 1 | -1;
@@ -23,10 +28,25 @@ export interface Reader {
   /** Scene x of the feet; the caller wraps or removes the figure when it leaves. */
   x: number;
   readonly dir: 1 | -1;
+  /** Walking speed in scene units per second at rate 1. */
+  readonly speed: number;
+  /** True while stopped to wave. */
+  readonly waving: boolean;
   /** Stop, look up from the book and wave. */
   wave(): void;
   /** Advance by dt seconds and draw standing on groundY. wind ≈ -2.4…2.4. */
-  update(t: number, dt: number, groundY: number, wind?: number): void;
+  update(t: number, dt: number, groundY: number, wind?: number, motion?: ReaderMotion): void;
+}
+
+export interface ReaderMotion {
+  /** Cadence and travel multiplier (default 1); 0 stands still. Feet stay planted at any rate. */
+  rate?: number;
+  /**
+   * 0…1: legs go from the walk into a leap (front leg reaching, rear leg trailing). The caller
+   * moves x and lifts groundY during the leap and passes rate 0; the walk resumes from the
+   * landing pose, front foot just planted.
+   */
+  leap?: number;
 }
 
 const lerpP = (a: Vec, b: Vec, t: number): Vec => { t = clamp(t, 0, 1); return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; };
@@ -59,17 +79,20 @@ export function createReader(parent: Element, opts: ReaderOptions = {}): Reader 
   pen(bookG, PEN * 0.5).setAttribute('d', 'M0.3 -8.6 L0 -1');
   const nearArm = limb(fig, 3.6);
 
-  const walk = gait({ kind: opts.gait ?? 'walk' });
+  const walk = gait({ kind: opts.gait ?? 'walk', ...(opts.period ? { period: opts.period } : {}), ...(opts.stride ? { stride: opts.stride } : {}) });
   const tail = spring(30, 4);
   const hold = spring(70, 9); // the book lags the body's rise and fall a little
   let phase = Math.random(), waveT = -1;
+  let leapPhase: number | null = null; // the landing pose's phase while leaping
 
   const self: Reader = {
     g: fig,
     x: 0,
     dir,
+    speed: walk.speed * scale,
+    get waving() { return waveT >= 0; },
     wave() { if (waveT < 0) waveT = 0; },
-    update(t, dt, groundY, wind = 0) {
+    update(t, dt, groundY, wind = 0, { rate = 1, leap = 0 } = {}) {
       // waving: slow to a stop, look up, wave, go back to the book
       let up = 0;
       if (waveT >= 0) {
@@ -77,12 +100,29 @@ export function createReader(parent: Element, opts: ReaderOptions = {}): Reader 
         up = waveT < 0.4 ? ease(waveT / 0.4) : waveT < WAVE_SECONDS - 0.5 ? 1 : 1 - ease((waveT - (WAVE_SECONDS - 0.5)) / 0.5);
         if (waveT > WAVE_SECONDS) waveT = -1;
       }
-      const go = 1 - up;
-      phase += (dt / walk.period) * go;
-      self.x += dir * walk.speed * scale * dt * go; // exactly the gait's speed, so planted feet don't slide
+      const move = (1 - up) * rate;
+      phase += (dt / walk.period) * move;
+      self.x += dir * walk.speed * scale * dt * move; // exactly the gait's speed, so planted feet don't slide
       place(fig, self.x, groundY, dir, scale);
 
-      const p = walk.pose(phase, go);
+      // standing (rate near 0) brings the feet together; a leap keeps the stride open
+      const go = leap > 0 ? 1 : (1 - up) * clamp(rate * 2.5, 0, 1);
+      let p = walk.pose(phase, go);
+      if (leap > 0) {
+        // Leap: start from the pose the walk will land in (front foot just planted, legs apart),
+        // reach the front foot forward and let the rear one trail with its toe down.
+        if (leapPhase === null) leapPhase = Math.round(phase * 2) / 2;
+        const land = walk.pose(leapPhase, 1);
+        const feet = land.feet.map((fo, i) => {
+          const front = i === land.front;
+          const ankle: Vec = [fo.ankle[0] + (front ? 3 : -5), fo.ankle[1] - (front ? 5 : 9)];
+          const from = p.feet[i];
+          const a = lerpP(from.ankle, ankle, leap);
+          return { ...fo, ankle: a, knee: joint(land.hip, a, walk.thigh, walk.shin, 1), pitch: from.pitch + ((front ? -12 : 26) - from.pitch) * leap };
+        }) as typeof p.feet;
+        p = { hip: lerpP(p.hip, land.hip, leap), feet, front: leap > 0.5 ? land.front : p.front, bob: p.bob + (land.bob - p.bob) * leap };
+        if (leap >= 1) phase = leapPhase; // fully in the air: from here the walk blends back in at the landing pose
+      } else leapPhase = null;
       const b = p.bob;
       p.feet.forEach((fo, i) => { legs[i].draw([p.hip, fo.knee, fo.ankle], [0.3, 0.8]); shoe(shoes[i], fo.ankle, fo.pitch); });
       fig.insertBefore(legs[p.front].g, coat); fig.insertBefore(shoes[p.front], coat);

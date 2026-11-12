@@ -13,8 +13,9 @@ const quotes = quoteReaders.map((reader, i) => ({ key: `problem.quotes.q${i + 1}
     <p data-i18n="problem.text">{t('problem.text')}</p>
   </div>
 
-  <!-- Line-art strip (src/lineart/street.ts): a reader walks past with a book. Decorative. -->
-  <div class="street" data-street aria-hidden="true"></div>
+  <!-- Line-art reader walking along the tops of the quote cards below, leaping the gaps
+       (src/lineart/beltwalk.ts). Decorative. -->
+  <div class="walker" data-beltwalk aria-hidden="true"></div>
 
   <!-- Quote belt: two identical lists glide left forever (CSS only); the copy is hidden from
        assistive tech. Static, swipeable row with reduced motion. -->
@@ -51,8 +52,8 @@ const quotes = quoteReaders.map((reader, i) => ({ key: `problem.quotes.q${i + 1}
 </section>
 
 <script>
-  import { initStreet } from '../lineart/street';
-  initStreet(document.querySelector<HTMLElement>('[data-street]'));
+  import { initBeltWalk } from '../lineart/beltwalk';
+  initBeltWalk(document.querySelector<HTMLElement>('[data-beltwalk]'), document.querySelector<HTMLElement>('[data-quotes] .belt'));
 </script>
 
 <style>
@@ -79,20 +80,18 @@ const quotes = quoteReaders.map((reader, i) => ({ key: `problem.quotes.q${i + 1}
     margin: 0 auto;
     padding: calc(120px * var(--space-scale)) var(--gutter) calc(20px * var(--space-scale));
   }
-  /* Walking reader: the SVG is drawn by script, so its nodes need :global. */
-  .street {
-    height: 120px;
-    margin-bottom: calc(28px * var(--space-scale));
+  /* Walking reader: an overlay whose bottom edge is the top edge of the quote cards (the belt
+     below has 8px of padding above them). The SVG is drawn by script, so its nodes need :global. */
+  .walker {
+    position: relative;
+    z-index: 1;
+    height: 140px;
+    margin-bottom: -8px;
     color: var(--green-900);
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    pointer-events: none;
   }
-  .street :global(svg) { display: block; }
-  .street :global(.pp) { fill: var(--paper); }
-  @media (max-width: 620px) {
-    .street { height: 96px; }
-  }
+  .walker :global(svg) { display: block; }
+  .walker :global(.pp) { fill: var(--paper); }
   h2 {
     margin: 0;
     max-width: 16em;
