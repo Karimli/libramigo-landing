@@ -2,7 +2,8 @@
 // out and touches it (onTouch), looks up, then moves on to another. Clicking a book sends him
 // there next; clicking him makes him wave. The caller drives step() from its own frame loop.
 
-import { el, inkDefs } from './lib/ink.ts';
+import { el } from './lib/ink.ts';
+import { inkFilter } from './filter.ts';
 import { ease, clamp } from './lib/motion.ts';
 import { createBoy, type BoyState } from './boy.ts';
 
@@ -33,7 +34,7 @@ export function createShelfBrowser({ root, books, onTouch, height = 128 }: Shelf
   svg.style.color = 'inherit';
   svg.style.overflow = 'visible';
   root.appendChild(svg);
-  const { filter } = inkDefs(svg, 'browser');
+  const filter = inkFilter(svg, 'browser');
   const boy = createBoy(svg, { scale: height / 95 });
   boy.g.setAttribute('filter', filter);
   boy.g.style.pointerEvents = 'auto';

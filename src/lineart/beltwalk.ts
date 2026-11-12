@@ -7,7 +7,8 @@
 // measured from the page. Runs only while on screen; with reduced motion she stands on a card, and moves with it
 // when the row is scrolled by hand.
 
-import { el, inkDefs, run } from './lib/ink.ts';
+import { el, run } from './lib/ink.ts';
+import { inkFilter } from './filter.ts';
 import { pointerWind, ease, clamp } from './lib/motion.ts';
 import { createReader } from './reader.ts';
 
@@ -25,7 +26,7 @@ export function initBeltWalk(root: HTMLElement | null, belt: HTMLElement | null)
   svg.style.color = 'inherit';
   svg.style.overflow = 'visible';
   root.appendChild(svg);
-  const { filter } = inkDefs(svg, 'beltwalk');
+  const filter = inkFilter(svg, 'beltwalk');
   // A little smaller on phones. An easy reading pace: about 35 px/s on the cards, against a belt
   // moving 22–27 px/s the other way, so with the leaps she gains some 15–20 px/s on screen.
   const phone = root.clientWidth < 700;

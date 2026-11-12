@@ -69,6 +69,8 @@ Bütün animasiyalar üçün qaydalar:
 - Dekorativ hissələr `aria-hidden`-dir; JavaScript olmadan sayt tam oxunur.
 - `src/lineart/lib/` qovluğundakı üç fayl [line-art-animation](https://github.com/JDhruv14/line-art-animation)
   reposundan dəyişdirilmədən götürülüb (MIT). Onlara toxunmayın; fiqurlar bir qovluq yuxarıdadır.
+- Fiqurlara "mürəkkəb" titrəyişi verən SVG filtri Safari mühərrikində (Mac Safari və iPhone/iPad-dəki bütün brauzerlər)
+  söndürülür, çünki orada filtr aşağı keyfiyyətlə çəkilir və xətlər bulanıq görünür (`src/lineart/filter.ts`).
 - Header-dəki loqo statikdir. Yazılma animasiyası sınaqdan keçirilib və rədd edilib.
 
 ## Gözləmə siyahısı

@@ -5,7 +5,8 @@
 // comes straight back with another letter. Nothing runs between visits.
 // Reduced motion: just the box, then a still of the boy beside it after joining.
 
-import { el, shape, paint, inkDefs, run, f, PEN, type Vec } from './lib/ink.ts';
+import { el, shape, paint, run, f, PEN, type Vec } from './lib/ink.ts';
+import { inkFilter } from './filter.ts';
 import { spring, ease, clamp } from './lib/motion.ts';
 import { createBoy, type BoyState } from './boy.ts';
 
@@ -22,7 +23,7 @@ export function initPostbox(root: HTMLElement | null, boyHeight = 96) {
   svg.style.color = 'inherit';
   svg.style.overflow = 'visible';
   root.appendChild(svg);
-  const { filter } = inkDefs(svg, 'post');
+  const filter = inkFilter(svg, 'post');
 
   // The box, drawn around its own origin: the foot of the post, on the ground.
   const box = el('g', { filter }, svg);

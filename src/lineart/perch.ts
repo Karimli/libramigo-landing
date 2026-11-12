@@ -4,7 +4,8 @@
 // the overlay's top and the card's right edge is EDGE px from the overlay's right: keep the
 // numbers here and in Roadmap.astro in step. Runs only while on screen; reduced motion: a still.
 
-import { el, inkDefs, run } from './lib/ink.ts';
+import { el, run } from './lib/ink.ts';
+import { inkFilter } from './filter.ts';
 import { createPercher } from './percher.ts';
 
 const SEAT = 64;
@@ -16,7 +17,7 @@ export function initPerch(root: HTMLElement | null) {
   svg.style.color = 'inherit';
   svg.style.overflow = 'visible';
   root.appendChild(svg);
-  const { filter } = inkDefs(svg, 'perch');
+  const filter = inkFilter(svg, 'perch');
   // The figure is drawn at scale 1 inside a group that CSS sizes through --perch-scale, so it can
   // be smaller where there is less room above the card (narrow screens, under the rail).
   const holder = el('g', { filter }, svg);

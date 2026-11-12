@@ -2,7 +2,8 @@
 // One talks with a hand while the other nods, then they swap. Clicking one gives them the word.
 // Runs only while on screen; with reduced motion it draws one still frame.
 
-import { el, pen, paint, inkDefs, run, PEN } from './lib/ink.ts';
+import { el, pen, paint, run, PEN } from './lib/ink.ts';
+import { inkFilter } from './filter.ts';
 import { rnd } from './lib/motion.ts';
 import { createSitter, type SitterState } from './sitter.ts';
 
@@ -19,7 +20,7 @@ export function initTalk(root: HTMLElement | null) {
   svg.style.color = 'inherit';
   svg.style.overflow = 'visible';
   root.appendChild(svg);
-  const { filter } = inkDefs(svg, 'talk');
+  const filter = inkFilter(svg, 'talk');
   const ground = pen(svg, 0.9);
   const scene = el('g', { filter }, svg);
 
